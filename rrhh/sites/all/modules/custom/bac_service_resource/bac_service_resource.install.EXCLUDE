@@ -1,0 +1,87 @@
+<?php
+/**
+ *
+ *  Implements hook_schema()
+ *
+ */
+function dandeleon_web_service_resources_schema(){
+	$schema ['precio_paquete'] = array(
+		'fields' => array(
+			'pid' => array(
+				'type' => 'serial',
+				'unsigned' => TRUE,
+				'not null' => TRUE,
+			),
+			'price' => array(
+				'type' => 'float',
+				'not null' => TRUE,
+				'default' => 0.00,
+			),
+			'nid_package' => array(
+				'type' => 'int',
+				'length' => 32,
+				'not null' => TRUE,
+				'default' => 0,
+			),
+		),
+	    'foreign keys' => array(
+		    'fk_package_price' => array(
+		    	'table' => 'node',
+		        'columns' => array('nid_package' => 'nid'),
+		    ),
+	    ),
+	    'primary key' => array('pid'),
+	);
+
+	//tabla moneda
+	$schema ['moneda'] = array(
+		'fields' => array(
+			'cod' => array(
+				'type' => 'serial',
+				'unsigned' => TRUE,
+				'not null' => TRUE,
+			),
+			'nombre' => array(
+				'type' => 'varchar',
+				'length' => 12,
+				'not null' => TRUE,
+				'default' => '',
+			),
+		),
+	    'primary key' => array('cod'),
+	);
+
+	//tabla tc
+	$schema ['tipo_cambio'] = array(
+		'fields' => array(
+			'id_tc' => array(
+				'type' => 'serial',
+				'unsigned' => TRUE,
+				'not null' => TRUE,
+			),
+			'cod_moneda' => array(
+				'type' => 'int',
+				'not null' => TRUE,
+				'default' => 0,
+			),
+			'fecha' => array(
+				'mysql_type' => 'DATETIME',
+  				'not null' => TRUE,
+			),
+			'tc' => array(
+				'type' => 'float',
+				'not null' => TRUE,
+				'default' => 0.00,
+			),
+		),
+	    'foreign keys' => array(
+		    'fk_package_price' => array(
+		    	'table' => 'moneda',
+		        'columns' => array('cod_moneda' => 'cod'),
+		    ),
+	    ),
+	    'primary key' => array('id_tc'),
+	);
+
+	return $schema;
+}

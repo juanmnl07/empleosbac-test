@@ -1,0 +1,4 @@
+name = BAC Web Sevice Resource
+description = Generate a resource to packages
+package = Web Services
+core = 7.x

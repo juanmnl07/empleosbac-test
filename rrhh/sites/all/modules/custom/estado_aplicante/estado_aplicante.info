@@ -1,0 +1,4 @@
+name = Estado Aplicante
+description = Funcionalidad personalizada para crear estado de aplicante por cada puesto aplicado, tipo bitacora
+package = others
+core = 7.x

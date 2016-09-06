@@ -1,0 +1,98 @@
+
+Servicios para los filtros
+http://bacrhapp.net/rrhh/api/filtros/filtros-entidades-carreras
+http://bacrhapp.net/rrhh/api/filtros/filtros-entidades-paises
+http://bacrhapp.net/rrhh/api/filtros/filtros-entidades
+
+
+http://bacrhapp.net/rrhh/api/filtros/filtros-taxonomias-idiomas
+http://bacrhapp.net/rrhh/api/filtros/filtros-taxonomias-jornadas
+http://bacrhapp.net/rrhh/api/filtros/filtros-taxonomias-nivel-academico
+http://bacrhapp.net/rrhh/api/filtros/filtros-taxonomias
+
+
+Filtro para categoria de blog
+/rrhh/api/filtros/categorias-blog
+
+
+Servicios para Listado de Carreras
+http://bacrhapp.net/rrhh/api/carreras/carreras-todas
+
+Servicio para Detalle de Carrera:
+http://bacrhapp.net/rrhh/api/carreras/carrera-detalle?carrera-id=8
+
+
+
+Listado de Puestos con un ejemplo de como enviar filtros
+http://bacrhapp.net/rrhh/api/puestos/puestos-todos?titulo=dise&pais[0]=1&carreras[0]=8&idiomas[0]=1&jornadas[0]=11&nivel-academico[0]=3
+
+Detalle de Puestos
+http://bacrhapp.net/rrhh/api/puestos/puesto-detalle?puesto-id=10
+
+Otros Puestos Pais
+http://bac.cr/rrhh/api/puestos/otros-puestos-pais?pais[0]=1&carreras[0]=9&puesto-id=393
+
+
+
+Listado Países
+http://bacrhapp.net/rrhh/api/paises/paises-todos
+
+Detalle de Pais
+http://bacrhapp.net/rrhh/api/paises/pais-detalle?pais-id=1
+
+/rrhh/api/paises/paises-colaboradores
+
+/rrhh/api/paises/paises-nombres
+/rrhh/api/paises/paises-datos-numericos
+
+
+Slider
+http://bacrhapp.net/rrhh/api/slider/slider-todos
+
+
+
+
+
+Blog:
+Listado de Todos los blogs con posibilidad de filtrar por categoría:
+http://bacrhapp.net/rrhh/api/blog/blog-todos?categoria-id=17&titulo=ejemplo
+
+Artículo de proyecto destacado que sale en pagina de carreras:
+http://bacrhapp.net/rrhh/api/blog/blog-proyecto-destacado-individual
+
+Detalle de Blog
+http://bacrhapp.net/rrhh/api/blog/blog-detalle?blog-id=350
+
+Blog del HOme
+http://bacrhapp.net/rrhh/api/blog/blog-todos-home
+
+
+Blog Primero de 5
+/rrhh/api/blog/blog-todos-primero-de-5
+
+
+
+Listado Blog 2 y 3 - 5
+/rrhh/api/blog/blog-todos-2y3-de-5
+
+Blog 4 de 5
+/rrhh/api/blog/blog-todos-4-de-5
+
+Blog 5 de 5
+/rrhh/api/blog/blog-todos-5-de-5
+
+Filtro para categoria de blog
+/rrhh/api/blog/categorias-blog
+
+
+
+
+
+Testimonios
+http://bacrhapp.net/rrhh/api/testimonios/testimonios-todos
+
+
+Para Back Office:
+
+Listado de Puestos: 
+http://bacrhapp.net/rrhh/api/puestos/puestos-todos-backoffice

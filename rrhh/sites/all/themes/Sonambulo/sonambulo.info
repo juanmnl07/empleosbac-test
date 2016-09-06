@@ -1,0 +1,59 @@
+name = Sonambulo
+description = Base theme, naked markup & CSS
+screenshot = screenshot.png
+version = 0.1
+engine = phptemplate
+core = 7.x
+
+;-------------- F E A T U R E S -------------
+features[] = logo
+features[] = favicon
+features[] = name
+features[] = slogan
+features[] = node_user_picture
+features[] = comment_user_picture
+features[] = comment_user_verification
+features[] = main_menu
+features[] = secondary_menu
+
+;-------------- R E G I O N S -------------
+;regions_hidden[] = im_a_hidden_but_visibel_for_a_module
+
+regions[page_top]           = Page Top
+regions[page_bottom]        = Page Bottom
+
+regions[utility_bar]        = Utility Bar
+regions[header]             = Header
+
+regions[help]               = Help
+regions[highlighted]        = Highlighted
+
+regions[above_content]      = Above Content
+regions[content]            = Content
+regions[sidebar_first]      = Sidebar First
+regions[sidebar_second]     = Sidebar Second
+regions[below_content]      = Below Content
+
+regions[footer]             = Footer
+regions[closure]            = Closure
+
+;-------------- C S S -------------
+; FOAD (F*** off and Die) technique - http://drupal.org/node/263967
+; Install Magic Module and kill CSS
+
+stylesheets[all][] = css/base.css
+stylesheets[all][] = css/modules.css
+stylesheets[all][] = css/layout.css
+stylesheets[all][] = css/theme.css
+stylesheets[all][] = css/sonambulo.css
+
+;-------------- JS -------------
+
+
+
+; Information added by drupal.org packaging script on 2013-10-01
+version = "7.x-2.x-dev"
+core = "7.x"
+project = "Sonambulo"
+datestamp = "1380636979"
+

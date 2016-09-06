@@ -1,0 +1,458 @@
+<?php
+/* Codigo para alterar el form de drupal cuando los administradores son de rol "administrador pais" */
+
+
+	function bac_node_create_form_alter_form_alter(&$form, &$form_state, $form_id){
+
+		// Load the currently logged in user.
+		global $user;
+		//dpm($form);
+		$user_info = user_load($user->uid);
+		//dpm($user_info->field_pais_trabajar);
+
+		//form puesto vacante
+		if(($form_id == 'puesto_vacante_node_form') || ($form_id == 'carrera_node_form') || ($form_id == 'pais_node_form')){
+			$form['actions']['cancel'] = array(
+		      '#type'   => 'submit',
+		      '#value'  => t('Cancel'),
+		      '#access' => TRUE,
+		      '#weight' => 0,
+		      '#submit' => array('bac_node_create_form_alter_form_cancel'),
+		      '#limit_validation_errors' => array(),
+		    );
+
+			/*Agregar el boton de editar*/
+			if (isset($form['#node']->nid) != null) {
+				if(($form['#node']->type == 'pais') || ($form['#node']->type == 'puesto_vacante')){
+      				// Is node edit form.
+					$title = '';
+					$type = $form['#node']->type;
+					switch ($type) {
+						case 'pais':
+							$title = 'País';
+							break;
+						case 'carrera':
+							$title = 'Carrera';
+							break;
+						case 'puesto_vacante':
+							$title = 'Puesto';
+							break;
+						default:
+							# code...
+							break;
+					}
+					$form['actions']['view'] = array(
+				      '#type'   => 'submit',
+				      '#value'  => 'Ver ' . $title,
+				      '#access' => TRUE,
+				      '#weight' => 15,
+				      '#submit' => array('bac_node_create_form_alter_form_view'),
+				      '#limit_validation_errors' => array(),
+				    );
+				}
+    		}
+		}
+
+		if($form_id=="user_login_block"){
+			$form['links']['#access'] = FALSE;
+		}
+
+		if (in_array('administrador país', $user->roles)) {
+		  	if (!empty($user_info->field_pais_trabajar)){
+		  		$form['field_pais']['#access'] = FALSE;
+		  		$form['field_pais']['und']['#default_value'] = $user_info->field_pais_trabajar['und'][0]['target_id'];
+		  		//dpm($form);
+		  	}
+		}
+
+		if ((in_array('administrador regional', $user->roles)) or (in_array('administrador país', $user->roles)) or (in_array('administrador blip', $user->roles))) {
+
+			if (in_array('administrador país', $user->roles)){
+				$form['options']['#access'] = TRUE;
+			}
+
+			if($form_id == "carrera_node_form"){
+				$form['author']['#access'] = FALSE;
+				$form['revision_information']['#access'] = FALSE;
+				$form['options']['promote']['#access'] = FALSE;
+				$form['options']['promote']['#default_value'] = 0;
+				$form['options']['sticky']['#access'] = FALSE;
+				$form['title']['#title'] = 'Título';
+			}
+
+			if($form_id == "pais_node_form"){
+				$form['author']['#access'] = FALSE;
+				$form['revision_information']['#access'] = FALSE;
+				$form['options']['promote']['#access'] = FALSE;
+				$form['options']['promote']['#default_value'] = 0;
+				$form['options']['sticky']['#access'] = FALSE;
+				$form['title']['#title'] = 'Título';
+			}
+			if($form_id == "puesto_vacante_node_form"){
+				$form['author']['#access'] = FALSE;
+				$form['revision_information']['#access'] = FALSE;
+				$form['options']['promote']['#access'] = FALSE;
+				$form['options']['promote']['#default_value'] = 0;
+				$form['options']['sticky']['#access'] = FALSE;
+				$form['title']['#title'] = 'Título';
+
+
+				//coloca el campo con un mes de tiempo cuando se está creando un puesto
+				if($form['nid']['#value']==null){
+					$fecha_actual = date("Y-m-d H:i:s", strtotime("+1 month"));
+					$form['field_fecha_de_cierre_de_oferta']['und'][0]['#default_value']['value'] = $fecha_actual;
+				}
+				
+				
+			}
+
+			/*or $form_id=="user_profile_form"*/
+			
+			if($form_id=="user_register_form" ||$form_id=="user_profile_form"){
+
+					if($form_id=="user_profile_form"){
+						$form['picture']['#access'] = FALSE;
+						if (isset($form['#user'])){
+							if(in_array('administrador regional', $form['#user']->roles)){
+								//dpm($form['#user']->roles[6]);
+								$form['field_pais_trabajar']['#access'] = FALSE;
+								$form['field_principal']['#access'] = FALSE;
+							}
+						}
+					}
+					$form['field_nacionalidad']['#access'] = FALSE;
+					$form['field_fecha_de_nacimiento']['#access'] = FALSE;
+					$form['field_genero']['#access'] = FALSE;
+					$form['field_telefono']['#access'] = FALSE;
+					$form['field_profesion']['#access'] = FALSE;
+					$form['field_cualidades']['#access'] = FALSE;
+					$form['field_ventaja_competitiva']['#access'] = FALSE;
+					$form['field_idiomas']['#access'] = FALSE;
+					$form['field_nivel_academico']['#access'] = FALSE;
+					$form['field_elances']['#access'] = FALSE;
+					$form['field_curriculum']['#access'] = FALSE;
+					$form['account']['notify']['#access'] = FALSE;
+					$form['field_imagen_perfil']['#access'] = FALSE;
+					$form['field_carrera_para_aplicar']['#access'] = FALSE;
+
+					if (isset($form['#user'])){
+						global $user;
+						if($form['#user']->uid == $user->uid){
+							$form['account']['status']['#access'] = FALSE;
+							$form['actions']['cancel']['#access'] = FALSE;
+						}
+
+						if(in_array('administrador regional', $form['#user']->roles) || in_array('administrador país', $form['#user']->roles)){
+							$form['field_puesto']['#access'] = FALSE;					
+							$form['field_estado']['#access'] = FALSE;
+							$form['field_ultimo_puesto_aplicado']['#access'] = FALSE;
+							
+							
+
+							if (in_array('administrador regional', $user->roles)) {
+								$form['account']['roles']['#options']=array(5 => 'administrador país', 6 => 'administrador regional');
+							}
+							if (in_array('administrador país', $user->roles)) {
+								
+
+								$form['account']['roles']['#options']=array(5 => 'administrador país');
+								$form['account']['roles']['#default_value'] = array(0=>5);
+								$form['account']['roles']['#access'] = FALSE;
+								$form['field_principal']['#access'] = FALSE;
+								
+
+								if (!empty($user_info->field_pais_trabajar)){
+							  		
+							  		$form['field_pais_trabajar']['und']['#default_value'] = array( 0 => $user_info->field_pais_trabajar['und'][0]['target_id'] );
+							  		$form['field_pais_trabajar']['#access'] = FALSE;
+
+							  		
+							  	}
+
+								
+							}
+						}
+					}
+					if($form_id=="user_register_form"){
+						$form['field_puesto']['#access'] = FALSE;					
+						$form['field_estado']['#access'] = FALSE;
+						$form['field_ultimo_puesto_aplicado']['#access'] = FALSE;
+						
+						
+
+						if (in_array('administrador regional', $user->roles)) {
+							$form['account']['roles']['#options']=array(5 => 'administrador país', 6 => 'administrador regional');
+						}
+						if (in_array('administrador país', $user->roles)) {
+							
+
+							$form['account']['roles']['#options']=array(5 => 'administrador país');
+							$form['account']['roles']['#default_value'] = array(0=>5);
+							$form['account']['roles']['#access'] = FALSE;
+							$form['field_principal']['#access'] = FALSE;
+							
+
+							if (!empty($user_info->field_pais_trabajar)){
+						  		
+						  		$form['field_pais_trabajar']['und']['#default_value'] = array( 0 => $user_info->field_pais_trabajar['und'][0]['target_id'] );
+						  		$form['field_pais_trabajar']['#access'] = FALSE;
+
+						  		
+						  	}
+
+							
+						}
+					}
+
+		
+				
+			}
+			
+		}
+	}
+
+	/**
+	 * Custom edit button callback.
+	 */
+	function bac_node_create_form_alter_form_view($form, &$form_state) {
+	  $node = node_load($form['nid']['#value']);
+	  $simplified_title = strtolower($node->title);
+	  $simplified_title = str_replace(" ", "-", $simplified_title);
+	  $simplified_title = removeAccents($simplified_title);
+	  $base = 'puestos';
+	  if($form['#node']->type == 'pais'){
+	  	$base = 'impacto-regional';
+	  }
+	  drupal_goto('../' . $base . '/' . $simplified_title . '/' . $node->nid);
+	}
+
+	/**
+	 * Custom cancel button callback.
+	 */
+	function bac_node_create_form_alter_form_cancel($form, &$form_state) {
+	  drupal_goto('admin/content');
+	}
+
+	function bac_node_create_form_alter_admin_menu_output_alter(&$content){
+		// Load the currently logged in user.
+		global $user;
+		//dpm($form);
+		$user_info = user_load($user->uid);
+
+		//dpm($content);
+		//dpm($user_info);
+		if ((in_array('administrador regional', $user->roles)) || (in_array('administrador país', $user->roles))) {
+			$content['menu']['admin/people']['#title'] = "Administradores";
+			$content['menu']['admin/people']['admin/people/create']['#title'] = "Añadir Administrador";
+			if (in_array('administrador país', $user->roles)) {
+				
+				if (!empty($user_info->field_principal)){
+			  		
+			  		if($user_info->field_principal['und'][0]['value']==0){
+			  			$content['menu']['admin/people']['#access'] = FALSE;
+			  			$content['menu']['admin/people']['admin/people/create']['#access'] = FALSE;
+			  		}	
+			  	}
+
+
+				
+			}
+			$content['menu']['admin/people']['admin/people/permissions']['#access'] = FALSE;
+		  	$content['menu']['admin/config']['#access'] = FALSE;
+		  	$content['menu']['admin/help']['#access'] = FALSE;
+		  	$content['menu']['admin/index']['#access'] = FALSE;
+		  	$content['icon']['#access'] = FALSE;
+		  	$content['account']['account']['#href'] = 'user/'.$user->uid.'/edit';
+
+
+
+		}
+	}
+
+	function bac_node_create_form_alter_menu_alter(&$items) {
+
+	  $items['admin/people/permissions']['access callback'] = 'custom_access_callback_people_permissions';
+	  $items['admin/people']['access callback'] = 'custom_access_callback_people';
+	  $items['node/%node/edit']['access callback'] = 'custom_access_callback_puestos';
+
+	}
+
+	function custom_access_callback_people_permissions($arg) {
+
+		global $user;
+		//dpm($form);
+		$user_info = user_load($user->uid);
+		
+		//Adding condition for the user roles. You can change 3 to your user role. I have tested this with administrator user role
+		if ((in_array('administrador regional', $user->roles)) || (in_array('administrador país', $user->roles)))  {
+			return FALSE;
+		}else {
+			return TRUE;
+		}
+
+	}
+
+	function custom_access_callback_puestos($op, $node) {
+
+		global $user;
+		
+		$user_info = user_load($user->uid);
+		//dpm($user_info);
+		//Adding condition for the user roles. You can change 3 to your user role. I have tested this with administrator user role
+		if ((in_array('administrador regional', $user->roles)) || (in_array('administrador país', $user->roles))|| (in_array('administrator', $user->roles)))  {
+			if ((in_array('administrador país', $user->roles)))  {
+				if (!empty($user_info->field_pais_trabajar)){
+			  		if($node->field_pais['und'][0]['target_id']==$user_info->field_pais_trabajar['und'][0]['target_id']){
+			  			return TRUE;
+			  		}else{
+			  			return FALSE;
+			  		}
+			  	}else{
+			  		return TRUE;
+			  	}
+			}else {
+				return TRUE;
+			}
+		}else{
+			return FALSE;
+		}
+
+	}
+
+
+	function custom_access_callback_people($arg) {
+
+		global $user;
+		//dpm($form);
+		$user_info = user_load($user->uid);
+		
+		//Adding condition for the user roles. You can change 3 to your user role. I have tested this with administrator user role
+		if(in_array('anonymous user', $user->roles) || in_array('aplicante', $user->roles)){
+			return FALSE;
+		} else if ( in_array('administrador país', $user->roles)) {
+				
+				if (!empty($user_info->field_principal)){
+			  		
+			  		if($user_info->field_principal['und'][0]['value']==0){
+			  			return FALSE;
+			  		}
+					else {
+						return TRUE;
+					}
+			  	}
+			  	else {
+					return TRUE;
+				}
+		}else {
+			return TRUE;
+		}
+			
+		
+
+	}
+
+	/* function remove accents */
+	function removeAccents($str){
+		$unwanted_array = array(    'Š'=>'S', 'š'=>'s', 'Ž'=>'Z', 'ž'=>'z', 'À'=>'A', 'Á'=>'A', 'Â'=>'A', 'Ã'=>'A', 'Ä'=>'A', 'Å'=>'A', 'Æ'=>'A', 'Ç'=>'C', 'È'=>'E', 'É'=>'E',
+                            'Ê'=>'E', 'Ë'=>'E', 'Ì'=>'I', 'Í'=>'I', 'Î'=>'I', 'Ï'=>'I', 'Ñ'=>'N', 'Ò'=>'O', 'Ó'=>'O', 'Ô'=>'O', 'Õ'=>'O', 'Ö'=>'O', 'Ø'=>'O', 'Ù'=>'U',
+                            'Ú'=>'U', 'Û'=>'U', 'Ü'=>'U', 'Ý'=>'Y', 'Þ'=>'B', 'ß'=>'Ss', 'à'=>'a', 'á'=>'a', 'â'=>'a', 'ã'=>'a', 'ä'=>'a', 'å'=>'a', 'æ'=>'a', 'ç'=>'c',
+                            'è'=>'e', 'é'=>'e', 'ê'=>'e', 'ë'=>'e', 'ì'=>'i', 'í'=>'i', 'î'=>'i', 'ï'=>'i', 'ð'=>'o', 'ñ'=>'n', 'ò'=>'o', 'ó'=>'o', 'ô'=>'o', 'õ'=>'o',
+                            'ö'=>'o', 'ø'=>'o', 'ù'=>'u', 'ú'=>'u', 'û'=>'u', 'ý'=>'y', 'þ'=>'b', 'ÿ'=>'y' );
+		return strtr( $str, $unwanted_array );
+	}
+
+	function formatURL($string) {
+        
+        $a = 'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ'; 
+        $b = 'aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr'; 
+        $string = utf8_decode($string);     
+        $string = strtr($string, utf8_decode($a), $b); 
+
+        $string = strtolower(trim($string));
+        $string = preg_replace("/[^a-z0-9-]/", "-", $string);
+        $string = preg_replace("/-+/", "-", $string);
+     
+        /*if(substr($string, strlen($string) - 1, strlen($string)) === "-") {
+            $string = substr($string, 0, strlen($string) - 1);
+        }*/
+     
+        return $string;
+    }
+
+	function bac_node_create_form_alter_node_insert($node) {	  
+		$base = 'puestos';
+		global $user;
+
+		//$simplified_title = strtolower($node->title);
+	    //$simplified_title = str_replace(" ", "-", $simplified_title);
+
+		# Borra la cache de consultas a drupal
+		deletecache($node->type);
+
+	    $simplified_title = formatURL($node->title);
+		if(($node->type == 'puesto_vacante') || ($node->type == 'pais')){
+
+			if($node->type == 'pais'){
+				$base = 'presencia-regional';
+			}
+			$options = array('query' => array('creado' => 'true'));
+			if($user->uid != 4985){
+	 			drupal_goto('../' . $base . '/' . $simplified_title . '/' . $node->nid, $options);
+	 		}
+		}
+	}
+
+	function bac_node_create_form_alter_node_update($node) {
+		$base = 'puestos';
+		global $user;
+		//$simplified_title = strtolower($node->title);
+	    //$simplified_title = str_replace(" ", "-", $simplified_title);
+
+		# Borra la cache de consultas a drupal
+		deletecache($node->type);
+
+	    $simplified_title = formatURL($node->title);
+		if(($node->type == 'puesto_vacante') || ($node->type == 'pais')){
+
+			if($node->type == 'pais'){
+				$base = 'presencia-regional';
+			}
+			$options = array('query' => array('editado' => 'true'));
+			if($user->uid != 4985){
+	 			drupal_goto('../' . $base . '/' . $simplified_title . '/' . $node->nid, $options);
+	 		}
+			
+		}
+
+		/*dpm($node->type);
+		if($node->type == 'puesto_vacante'){
+			//cache clear to codeigniter
+			$url = 'http://bac.cr/webcache/clear';
+		    $curl = curl_init($url);    
+		    $response = curl_exec($curl);
+		    curl_close($curl);
+		}*/
+
+	}
+
+
+	function deletecache($tipo){
+		$tipos = array(
+			'testimonio',
+			'slider',
+			'puesto_vacante',
+			'pais',
+			'carrera',
+			'blog'										
+		);
+		if(in_array($tipo, $tipos)){
+                    $url = 'http://bac.orbelink.com/webcache/deletecache/'.$tipo;
+		    $curl = curl_init($url);    
+		    $response = curl_exec($curl);
+		    curl_close($curl);
+		}			
+
+	}
+	
+		
+?>

@@ -1,0 +1,4 @@
+name = BAC Node Create - Form Alter 
+description = Este módulo altera la funcionalicad de Drupal para que los administradores de un país específico solo puedan crear puestos de trabajo del país correspondiente.
+package = Orbelink
+core = 7.x

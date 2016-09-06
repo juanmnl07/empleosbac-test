@@ -1,0 +1,1 @@
+<input id="imagen_" name="imagen" type="file" class="form-file" capture="camera" />

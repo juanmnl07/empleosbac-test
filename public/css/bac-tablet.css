@@ -1,0 +1,447 @@
+@media (max-width: 991px) {
+
+	#info-perfil .pie,
+	.formreg .contentform{
+		width: 100%;
+	}
+	.tooltip-form-register-detail{
+		right: 0px;
+		top: auto;
+		bottom: 45px;
+
+	}
+	.tooltip-form-register-detail:before{
+		display: none;
+	}
+	#close_popup{
+		display: block;
+	}
+	.mapa-container{
+		width: 100%;
+		min-width: auto;
+		max-width: 100%;
+	}
+	.form-contacto .contact-pais-select-wrapper,
+	.form-contacto select{
+		width: 100%;
+	}
+	.impacto-regional-detalle-datos .boxcol{
+		min-height: 280px;
+	}
+	.st_imppos .ct_imppos .row_imppos h2{
+		font-size: 25px;
+		line-height: 27px;
+	}
+	.st-impacto-regional-mapa-bloque .st-impacto-regional-mapa-bloque-inner,
+	.st-impacto-regional-mapa-bloque .mapa-container-impacto-regional{
+		background-size: cover;
+		padding-top: 30px; padding-bottom: 20px;
+		height: auto;
+		background-position: center;
+	}
+	.mapa-indicacion,
+	.mapas-paises-hover-container{
+		display: none;
+	}
+	.tooltip-container{
+	    width: 200px;
+	    margin: 0 auto;
+	    float: none;
+	    position: relative;
+	}
+	.vista-contacto .tooltip-container{
+		padding-top: 70px;
+	}
+	.vista-contacto .popup-container{
+		margin: 0 auto;
+		left: 0px; right: 0px;
+		bottom: auto;
+		top: 25%;		
+	}
+	.tooltip-pais-wrapper{
+		position: static;
+	}
+	.st-impacto-regional-mapa-bloque .tooltip-pais-wrapper,
+	.tooltip-pais-wrapper{
+		width: 100%;
+		background: none;
+		background: rgba(255, 255, 255, 0.6);
+		padding: 0px;
+		margin-bottom: 5px;
+	}
+	.tooltip-pais-wrapper:hover{
+		transform: translate(0,0);
+	}
+	.st-impacto-regional-mapa-bloque .tooltip-pais-wrapper a,
+	.tooltip-pais-wrapper a.tooltip-pais{
+		font-size: 16px;
+		line-height: 45px; height: auto;
+		margin-bottom: 0px;
+		width: 100%; margin: 0px;
+		text-transform: uppercase;
+	}
+	
+	.arow .acol{
+		width: 50%;
+		min-height: 250px;
+	}
+	.arow .acol.last{
+		width: 100%;
+	}
+	.comentarios .comentarios-inner .comentario span .comentario-autor,
+	.comentarios .comentarios-inner .comentario span .comentario-fecha{
+		font-size: 14px;
+	}
+	.comentarios .comentarios-inner .comentario{
+		padding-left: 5px;
+	}
+	
+	#filtro-blog-form input,
+	.filtro-categorias > a{
+		background-position: 97% 50%;
+		margin-bottom: 10px;
+	}
+	#filtro-blog-form{
+		width: 100%;
+	}
+	.articulos-mas-recientes .rel{
+		width: 300px;
+		margin: 0 auto;
+		margin-bottom: 10px;
+	}
+	.articulos-mas-recientes .rel img{
+		width: 100%;
+	}
+	.articulos-listado-normal .articulo-box{
+		width: 320px;
+		margin: 0 auto;
+		border: 1px solid #CCC !important;
+		padding: 10px;
+		margin-bottom: 10px;
+	}
+	.filtro-categorias > a{
+	    padding-right: 30px;
+	    overflow: hidden;
+	    height: 55px;		
+	}
+	.filtrado-blog p{
+	    font-size: 18px;
+	    line-height: 15px;
+	    padding-top: 16px;
+	}
+	.articulos-listado-normal .articulo-box .articulo-imagen a{
+		width: 100%;
+	}
+	.box_compartir .box_compartir_comp{
+		padding-top: 37px;	
+	}
+	.box_compartir .box_compartir_comp .btn_shared{
+		width: 60%;
+	}
+	.box_compartir .box_compartir_comp .btn_shared span{
+	    display: block;
+	    width: 50%;
+	    margin-bottom: 10px;
+	    float: left;
+	}
+	.st_otros_puestos .ct_otros_puestos .bx-wrapper .bx-pager{
+		bottom: 0px;
+	}
+	.st_otros_puestos .ct_otros_puestos .bx-wrapper{
+		margin: 70px auto 30px !important;
+	}
+	.info_puesto_box .ipb_icon{
+		width: 50px;
+	}
+	.info_puesto_box .idatos{
+		font-size: 14px;
+	}
+	.filtrado.fclose .mostrarfiltros{
+		width: 80%;
+	}
+	.ct_cintillo_registro .info_registro p{
+	    font-size: 25px;
+	    line-height: 28px;
+	}
+	.filtrado.fopen{
+		height: auto;
+	}
+	ul.as_tabs li{
+		height: auto;
+	}
+	ul.as_tabs li[data-tab='tab-4']{
+		line-height: 21px;
+	}
+	.ct_cintillo_puestos p{
+	    font-size: 18px;
+	    line-height: 20px;		
+	}
+	.ct_cintillo_puestos p span{
+		font-size: 18px;
+	}
+	.ct_testimonios h3{
+	    font-size: 28px;
+	    line-height: 25px;
+	    margin-top: 40px;		
+	}
+	.ct_testimonios .bx-wrapper .bx-viewport{
+		width: 80% !important;
+	}
+	.slider-caption{
+		background: none;
+	}
+	.slider-caption{
+		width: 700px;
+		top: 0px;
+	}	
+	/*ul.slider-home li{
+		width: 20% !important;
+	}*/
+	.bx-wrapper img{
+		width: 100% !important;
+	}	
+	.row_carreras{
+		margin-bottom: 0px;
+	}
+	.carrera_box{
+		width: 212px;
+		height: 212px;
+		margin: 0 auto;
+		margin-bottom: 20px;
+	}
+	.carrera_box a:hover{
+		background-size: contain;
+	}
+	.carrera_box a:hover::after{
+		display: none;
+	}
+	/*.carrera_box a{
+		width: 100%;
+		height: 210px;
+		padding: 0px 20px;
+		font-size: 15px;
+		background-size: contain;
+	}*/
+	.st-alcance-regional-bloque{
+		display: none;
+	}
+	.st_carreras{
+		background-color: #F2F2F2;
+	}
+	.historia_box{
+		width: 100%;
+	}
+	.ct_header{
+		height: auto;
+		padding-bottom: 20px;
+	}
+	.ct_header #logo{
+		width: 280px;
+	}
+	.ct_header .topright{
+		margin: 0 auto;
+		margin-top: 30px;
+	}
+
+	.valores-container .w-row .w-col-4{
+		width: 50%;
+		max-height: 255px;
+	}
+	.valores-container .w-row .w-col-4 img{
+		width: 100%;
+	}
+	.valores-container .w-row .w-col .valorhover{
+		padding-top: 20px;
+	}
+	.valores-container .w-row .w-col .valorhover strong{
+		margin-bottom: 20px;
+	}		
+
+}
+
+@media (max-width: 767px) {
+	
+	.formreg .contentform{
+		width: 100%;
+	}
+	.mapa-container{
+		margin-top: 20px;
+		height: auto;
+		min-height: auto;
+		padding-top: 30px;
+		padding-bottom: 30px;
+	}
+	.vista-contacto .tooltip-container{
+		padding-top: 0px;
+	}
+	.st_imppos .ct_imppos .row_imppos .txtleft{
+		padding: 10px;
+
+	}
+	.st_imppos .ct_imppos .row_imppos .txtright{
+		padding: 10px;
+	}
+	.historias-relacionadas .historia-relacionada .historia-relacionada-texto{
+		width: 70%;
+		margin: 0 auto;
+	}
+	.w-col.w-col-2.historia-relacionada-image a{ display: block;
+		width: 170px;
+		float: none;
+		margin:  0 auto;
+	}
+	.historias-relacionadas h3{
+		text-align: center;
+	}
+	.comentarios .comentarios-inner .comentario span{
+		border: none;
+	}
+	.box_compartir .box_compartir_comp{
+		padding-top: 37px;	
+	}
+	.box_compartir .box_compartir_comp .btn_shared{
+		width: 100%;
+		text-align: center;
+	}
+	.box_compartir .box_compartir_comp .btn_shared span{
+	    display: inline-block;
+	    width: 46px;
+	    float: none;
+	}
+	.detalle_puesto{
+		padding-right: 0px;
+	}
+	
+	.btn_atras{
+		margin-bottom: 30px;
+	}
+
+	.filtro_puestos tbody tr td,
+	.filtro_puestos tbody tr td a,
+	.filtro_puestos_aplicados tbody tr td,
+	.filtro_puestos_aplicados tbody tr td a{
+		font-size: 12px;
+	}
+	/*.filtro_puestos tbody tr td,
+	.filtro_puestos_aplicados tbody tr td{
+		width: 25% !important;
+	}*/
+
+
+	ul.as_tabs li.selectopc span{
+		right: 45px;
+	}
+	.filtrado.fclose .mostrarfiltros{
+		width: 100%;
+		border-right: none;
+		background-position: 100% 50%;
+	}
+	.filtrado .as_content{
+		height: auto;
+		padding-bottom: 50px;
+	}
+	.optionfiltros{
+		position: relative;
+		z-index: 99;
+	}
+	ul.as_tabs li[data-tab='tab-4']{
+		line-height: 44px;
+	}
+	.ct_cintillo_registro a.btn_registro{
+		float: none;
+		margin: 0 auto;
+	}
+	.ct_cintillo_registro .info_registro p{
+		text-align: center;
+	}
+	.ct_cintillo_registro{
+		height: auto;
+		padding-bottom: 15px;
+	}
+	h1, .h1{
+		font-size: 36px;
+		line-height: 34px;
+	}
+	h2{
+		font-size: 25px;
+		line-height: 24px;
+	}	
+	.ct_cintillo_puestos a{
+		float: none;
+		margin: 0 auto;
+	}
+	.ct_cintillo_puestos p{
+		text-align: center;
+	}
+	.ct_cintillo_puestos{
+		height: auto;
+	}
+	.rcultura img{
+		width: 100%;
+	}
+	.rcultura.rimgs img{
+		display: block;
+		width: 340px;
+		margin: 0 auto;
+		margin-bottom: 10px;
+	}
+
+	.slider-wrapper .bx-wrapper .bx-viewport{
+		height: auto !important;
+	}
+	.slider-caption{
+		position: relative;
+		width: 100%;
+		z-index: 999;
+		background-color: #FFF;
+	}
+	.slider-caption h3{
+		color: #2A2421;
+	}
+	.slider-caption .slider-text p{
+		color: #2A2421;
+	}	
+
+	.st-suscripcion-boletin .row_suscripcion-boletin input{
+		width: 100%;
+		margin-bottom: 20px;
+	}
+
+	.historia_box{
+		width: 280px;
+		height: auto;
+		margin: 0 auto;
+		margin-bottom: 50px;
+	}
+	.ct_footer{
+		padding-top: 0px;
+		height: auto;
+	}
+	.ct_footer .w-col-3{
+		padding-top: 40px;
+	}
+	.ct_header #logo{
+		display: block;
+		float: none;
+		margin: 0 auto;
+		margin-top: 20px;
+	}
+	.ct_header .topright{
+		width: 97%;
+		float: none;
+		text-align: center;
+	}
+	.ct_header .topright a.btnmenu{
+		float: right;
+	}	
+	.ct_footer .w-col-3{
+		width: 50%;
+	}
+	.valores-container .w-row .w-col .valorhover{
+		padding-top: 15px;
+	}
+	.valores-container .w-row .w-col .valorhover strong{
+		margin-bottom: 10px;
+	}		
+
+}

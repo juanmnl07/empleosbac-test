@@ -1,0 +1,944 @@
+<?php
+
+/**
+ *  Implements hook_ 
+ */
+/**
+ * Implements of hook_services_resources().
+ */
+function estado_aplicante_services_resources() {
+  $api = array(
+    'puestos_aplicados' => array(
+      'operations' => array(
+        'retrieve' => array(
+          'help' => 'Obtener la fecha de aplicacion a un puesto',
+          'callback' => '_estado_aplicante_bitacora_retrieve',
+          'access callback' => 'user_access',
+          'access arguments' => array('access content'),
+          'access arguments append' => FALSE,
+          'args' => array(
+            array(
+              'name' => 'fn',
+              'type' => 'string',
+              'description' => 'Function to perform',
+              'source' => array('path' => '0'),
+              'optional' => TRUE,
+              'default' => '0',
+            ),
+            array(
+              'name' => 'uid_aplicante',
+              'type' => 'int',
+              'description' => 'Identificacion del aplicante',
+              'source' => array('param' => 'uid_aplicante'),
+              'optional' => TRUE,
+              'default' => '0',
+            ),
+            array(
+              'name' => 'nid_puesto',
+              'type' => 'int',
+              'description' => 'Identificacion del puesto',
+              'source' => array('param' => 'nid_puesto'),
+              'optional' => TRUE,
+              'default' => '0',
+            ),
+          ),
+        ),
+      ),
+    ),
+    'puestos_aplicados_total' => array(
+      'operations' => array(
+        'retrieve' => array(
+          'help' => 'Obtener el total de puestos aplicados por aplicante',
+          'callback' => '_estado_aplicante_bitacora_total_retrieve',
+          'access callback' => 'user_access',
+          'access arguments' => array('access content'),
+          'access arguments append' => FALSE,
+          'args' => array(
+            array(
+              'name' => 'fn',
+              'type' => 'string',
+              'description' => 'Function to perform',
+              'source' => array('path' => '0'),
+              'optional' => TRUE,
+              'default' => '0',
+            ),
+            array(
+              'name' => 'uid_aplicante',
+              'type' => 'int',
+              'description' => 'Identificacion del aplicante',
+              'source' => array('param' => 'uid_aplicante'),
+              'optional' => TRUE,
+              'default' => '0',
+            ),
+          ),
+        ),
+      ),
+    ),
+    'aplicantes_costa_rica' => array(
+      'operations' => array(
+        'retrieve' => array(
+          'help' => 'Obtener todos los aplicantes de Costa Rica y sus aplicaciones',
+          'callback' => '_estado_aplicante_aplicantes_costa_rica',
+          'access callback' => 'user_access',
+          'access arguments' => array('access content'),
+          'access arguments append' => FALSE,
+          'args' => array(
+            array(
+              'name' => 'fn',
+              'type' => 'string',
+              'description' => 'Function to perform',
+              'source' => array('path' => '0'),
+              'optional' => TRUE,
+              'default' => '0',
+            ),
+            array(
+              'name' => 'uid_aplicante',
+              'type' => 'int',
+              'description' => 'Identificacion del aplicante',
+              'source' => array('param' => 'uid_aplicante'),
+              'optional' => TRUE,
+              'default' => '0',
+            ),
+          ),
+        ),
+      ),
+    ),
+    'aplicantes_listado_costa_rica' => array(
+      'operations' => array(
+        'retrieve' => array(
+          'help' => 'Obtener todos los aplicantes de Costa Rica por medio de un listado',
+          'callback' => '_estado_aplicante_aplicantes_listado_costa_rica',
+          'access callback' => 'user_access',
+          'access arguments' => array('access content'),
+          'access arguments append' => FALSE,
+          'args' => array(
+            array(
+              'name' => 'fn',
+              'type' => 'string',
+              'description' => 'Function to perform',
+              'source' => array('path' => '0'),
+              'optional' => TRUE,
+              'default' => '0',
+            ),
+          ),
+        ),
+      ),
+    ),
+    'puestos_aplicados_bitacora' => array(
+      'operations' => array(
+        'retrieve' => array(
+          'help' => 'Obtener la fecha y el estado de aplicacion a un puesto',
+          'callback' => '_estado_aplicante_bitacora_admin_retrieve',
+          'access callback' => 'user_access',
+          'access arguments' => array('access content'),
+          'access arguments append' => FALSE,
+          'args' => array(
+            array(
+              'name' => 'fn',
+              'type' => 'string',
+              'description' => 'Function to perform',
+              'source' => array('path' => '0'),
+              'optional' => TRUE,
+              'default' => '0',
+            ),
+            array(
+              'name' => 'uid_aplicante',
+              'type' => 'int',
+              'description' => 'Identificacion del aplicante',
+              'source' => array('param' => 'uid_aplicante'),
+              'optional' => TRUE,
+              'default' => '0',
+            ),
+            array(
+              'name' => 'nid_puesto',
+              'type' => 'int',
+              'description' => 'Identificacion del puesto',
+              'source' => array('param' => 'nid_puesto'),
+              'optional' => TRUE,
+              'default' => '0',
+            ),
+          ),
+        ),
+      ),
+    ),
+    'change_password' => array(
+      'operations' => array(
+        'retrieve' => array(
+          'help' => 'Obtener la fecha y el estado de aplicacion a un puesto',
+          'callback' => '_estado_aplicante_change_password',
+          'access callback' => 'user_access',
+          'access arguments' => array('access content'),
+          'access arguments append' => FALSE,
+          'args' => array(
+            array(
+              'name' => 'fn',
+              'type' => 'string',
+              'description' => 'Function to perform',
+              'source' => array('path' => '0'),
+              'optional' => TRUE,
+              'default' => '0',
+            ),
+            array(
+              'name' => 'u_email',
+              'type' => 'string',
+              'description' => 'Identificacion del aplicante',
+              'source' => array('param' => 'u_email'),
+              'optional' => TRUE,
+              'default' => '0',
+            ),
+            array(
+              'name' => 'clave',
+              'type' => 'string',
+              'description' => 'Identificacion del puesto',
+              'source' => array('param' => 'clave'),
+              'optional' => TRUE,
+              'default' => '0',
+            ),
+            array(
+              'name' => 'token',
+              'type' => 'string',
+              'description' => 'token',
+              'source' => array('param' => 'token'),
+              'optional' => TRUE,
+              'default' => '0',
+            ),
+          ),
+        ),
+      ),
+    ),
+    'validate_email' => array(
+      'operations' => array(
+        'retrieve' => array(
+          'help' => 'Verificar disponibilidad de correo en el formulario de registro',
+          'callback' => '_verificar_disponibilidad_correo',
+          'access callback' => 'user_access',
+          'access arguments' => array('access content'),
+          'access arguments append' => FALSE,
+          'args' => array(
+            array(
+              'name' => 'fn',
+              'type' => 'string',
+              'description' => 'Function to perform',
+              'source' => array('path' => '0'),
+              'optional' => TRUE,
+              'default' => '0',
+            ),
+            array(
+              'name' => 'u_email',
+              'type' => 'string',
+              'description' => 'correo del usuario',
+              'source' => array('param' => 'u_email'),
+              'optional' => TRUE,
+              'default' => '0',
+            ),
+          ),
+        ),
+      ),
+    ),
+    'reiniciar_estado' => array(
+      'operations' => array(
+        'retrieve' => array(
+          'help' => 'Reiniciar el estado de una aplicacion a su estado original "No leido"',
+          'callback' => '_reiniciar_estado_aplicacion',
+          'access callback' => 'user_access',
+          'access arguments' => array('access content'),
+          'access arguments append' => FALSE,
+          'args' => array(
+            array(
+              'name' => 'fn',
+              'type' => 'string',
+              'description' => 'Function to perform',
+              'source' => array('path' => '0'),
+              'optional' => TRUE,
+              'default' => '0',
+            ),
+            array(
+              'name' => 'idPuesto',
+              'type' => 'string',
+              'description' => 'identificacion del puesto',
+              'source' => array('param' => 'idPuesto'),
+              'optional' => TRUE,
+              'default' => '0',
+            ),
+            array(
+              'name' => 'idAplicante',
+              'type' => 'string',
+              'description' => 'identificacion del aplicante',
+              'source' => array('param' => 'idAplicante'),
+              'optional' => TRUE,
+              'default' => '0',
+            ),
+          ),
+        ),
+      ),
+    ),
+    'liberar_estado' => array(
+      'operations' => array(
+        'retrieve' => array(
+          'help' => 'Liberar el estado de una aplicacion a su estado original "No leido" directamente',
+          'callback' => '_liberar_estado_aplicacion',
+          'access callback' => 'user_access',
+          'access arguments' => array('access content'),
+          'access arguments append' => FALSE,
+          'args' => array(
+            array(
+              'name' => 'fn',
+              'type' => 'string',
+              'description' => 'Function to perform',
+              'source' => array('path' => '0'),
+              'optional' => TRUE,
+              'default' => '0',
+            ),
+            array(
+              'name' => 'idAplicante',
+              'type' => 'string',
+              'description' => 'identificacion del aplicante',
+              'source' => array('param' => 'idAplicante'),
+              'optional' => TRUE,
+              'default' => '0',
+            ),
+            array(
+              'name' => 'idEstado',
+              'type' => 'string',
+              'description' => 'tipo de estado',
+              'source' => array('param' => 'idEstado'),
+              'optional' => TRUE,
+              'default' => '0',
+            ),
+          ),
+        ),
+      ),
+    ),
+  );
+  return $api;
+}
+
+function _estado_aplicante_aplicantes_listado_costa_rica($fn){
+  return estado_aplicante_obtener_aplicantes_listado_costa_rica();
+}
+
+function _reiniciar_estado_aplicacion($fn, $idPuesto, $idAplicante){
+  $deleted = db_delete('bitacora_aplicante')
+  ->condition('nid_puesto', $idPuesto)       
+  ->condition('uid_aplicante', $idAplicante)       
+  ->execute();
+  if($deleted){
+    $deleted = 1;
+  }
+  return array('status', $deleted);
+}
+
+function _liberar_estado_aplicacion($fn, $idAplicante, $idEstado){
+  /*global $user;
+  $uid_admin = $user->uid;
+  $uid_aplicante = $user_aplicante->uid;
+  $tid_estado = 27;  //es el tid del estado "no leido"
+  $fecha = time(); //fecha actual en unixtimestamp*/
+  liberar_estado_del_aplicante($idAplicante, $idEstado);
+}
+
+function _verificar_disponibilidad_correo($fn, $u_email) {
+  // Check for mad values
+  return estado_aplicante_consultar_existencia_correo($u_email);
+}
+
+function _estado_aplicante_change_password($fn, $u_email, $clave, $token) {
+  // Check for mad values
+  return estado_aplicante_cambiar_clave($u_email, $clave, $token);
+}
+
+function _estado_aplicante_bitacora_retrieve($fn, $uid_aplicante, $nid_puesto) {
+  // Check for mad values
+  $uid_aplicante = intval($uid_aplicante);
+  $nid_puesto = intval($nid_puesto);
+  return estado_aplicante_obtener_fecha_aplicacion($uid_aplicante, $nid_puesto);
+}
+
+function _estado_aplicante_bitacora_total_retrieve($fn, $uid_aplicante) {
+  // Check for mad values
+  $uid_aplicante = intval($uid_aplicante);
+  return estado_aplicante_obtener_total_aplicaciones($uid_aplicante);
+}
+
+function _estado_aplicante_bitacora_admin_retrieve($fn, $uid_aplicante, $nid_puesto) {
+  // Check for mad values
+  $uid_aplicante = intval($uid_aplicante);
+  $nid_puesto = intval($nid_puesto);
+  return estado_aplicante_obtener_detalle_aplicacion($uid_aplicante, $nid_puesto);
+}
+
+function _estado_aplicante_aplicantes_costa_rica($fn, $uid_aplicante){
+  //obtener todos los datos de los aplicantes de costa rica y sus aplicaciones
+  $uid_aplicante = intval($uid_aplicante);
+  return estado_aplicante_obtener_aplicantes_costa_rica($uid_aplicante);
+}
+
+function liberar_estado_del_aplicante($uid_aplicante, $tid_estado){
+  $update = db_update('aplicante_estado')
+    ->fields(array(
+      'tid_estado' => $tid_estado
+    ))
+    ->condition('uid_aplicante', $uid_aplicante)       
+    ->execute();
+    return $update;
+}
+
+function estado_aplicante_obtener_aplicantes_listado_costa_rica(){
+  $query = db_select('users', 'u');
+  $query->leftjoin('users_roles', 'ur', '(ur.uid = u.uid)');
+  $query->leftjoin('aplicante_estado', 'ae', '(ae.uid_aplicante = u.uid)');
+  $query->leftjoin('field_data_field_nombre_y_apellidos', 'fdfna', '(fdfna.entity_id = u.uid)');
+  $query->leftjoin('field_data_field_pais_trabajar', 'fdfpt', '(fdfpt.entity_id = u.uid)');
+  //$query->leftjoin('field_data_field_nacionalidad', 'fdfnac', '(fdfnac.entity_id = u.uid)');
+  $query->fields('u', array('uid','created'));
+  $query->fields('fdfna', array('field_nombre_y_apellidos_value'));
+  $query->fields('ae', array('tid_estado','modified'));
+  //$query->condition('fdfnac.field_nacionalidad_iso2','CR', '=');
+  $query->condition('fdfpt.field_pais_trabajar_target_id', 10, '=');
+  $query->condition('ur.rid', 4, '=');
+  $items = $query->execute()->fetchAll();
+  return $items;
+}
+
+function estado_aplicante_obtener_aplicantes_costa_rica($uid_aplicante){
+
+  //return $uid_aplicante;
+  $query = db_select('users', 'u');
+  $query->leftjoin('field_data_field_nacionalidad', 'fdfn', '(fdfn.entity_id = u.uid)');
+  $query->leftjoin('users_roles', 'ur', '(ur.uid = u.uid)');
+  $query->leftjoin('field_data_field_nombre_y_apellidos', 'fdfna', '(fdfna.entity_id = u.uid)');
+  $query->leftjoin('field_data_field_cualidades', 'fdfc', '(fdfc.entity_id = u.uid)');
+  $query->leftjoin('field_data_field_fecha_de_nacimiento', 'fdffn', '(fdffn.entity_id = u.uid)');
+  $query->leftjoin('field_data_field_genero', 'fdfg', '(fdfg.entity_id = u.uid)');
+  $query->leftjoin('field_data_field_nacionalidad', 'fdfnac', '(fdfnac.entity_id = u.uid)');
+  $query->leftjoin('field_data_field_ventaja_competitiva', 'fdfvc', '(fdfvc.entity_id = u.uid)');
+  $query->leftjoin('field_data_field_telefono', 'fdft', '(fdft.entity_id = u.uid)');
+  $query->leftjoin('field_data_field_nivel_academico', 'fdfnaca', '(fdfnaca.entity_id = u.uid)');
+  $query->leftjoin('field_data_field_profesion', 'fdfpr', '(fdfpr.entity_id = u.uid)');
+  $query->leftjoin('field_data_field_imagen_perfil', 'fdfip', '(fdfip.entity_id = u.uid)');
+  //$query->join('field_data_field_pais_trabajar', 'fdfpt', '(fdfpt.entity_id = u.uid)');
+  $query->leftjoin('field_data_field_estado_civil', 'fdfec', '(fdfec.entity_id = u.uid)');
+  $query->leftjoin('field_data_field_discapacidad', 'fdfd', '(fdfd.entity_id = u.uid)');
+  $query->leftjoin('field_data_field_trabajo_anteriormente_bac', 'fdftab', '(fdftab.entity_id = u.uid)');
+  //$query->leftjoin('field_data_field_envio_de_informacion', 'fdfei', '(fdfei.entity_id = u.uid)');
+  $query->leftjoin('file_managed', 'fm', '(fm.fid = fdfip.field_imagen_perfil_fid)');
+  //$query->join('taxonomy_term_data', 'ttdnaca', '(ttd.tid = fdfnaca.field_nivel_academico_tid)');
+  $query->fields('fdfna', array('field_nombre_y_apellidos_value'));
+  $query->fields('u', array('mail', 'uid'));
+  $query->fields('fdfn', array('field_nacionalidad_iso2')); 
+  $query->fields('fdfc', array('field_cualidades_value')); 
+  $query->fields('fdffn', array('field_fecha_de_nacimiento_value'));
+  $query->fields('fdfg', array('field_genero_value')); 
+  $query->fields('fdfnac', array('field_nacionalidad_iso2')); 
+  $query->fields('fdfpr', array('field_profesion_value')); 
+  $query->fields('fdfvc', array('field_ventaja_competitiva_value')); 
+  $query->fields('fdft', array('field_telefono_value')); 
+  $query->fields('fdfnaca', array('field_nivel_academico_tid'));  
+  $query->fields('fdfec', array('field_estado_civil_tid'));  
+  $query->fields('fdfd', array('field_discapacidad_tid'));  
+  $query->fields('fdftab', array('field_trabajo_anteriormente_bac_tid'));
+  //$query->fields('fdfei', array('field_envio_de_informacion_tid'));
+  $query->fields('fm', array('uri'));
+  //$query->fields('fdfpt', array('field_pais_trabajar_target_id')); 
+  //$query->condition('fdfn.field_nacionalidad_iso2', 'CR', '=');
+  if($uid_aplicante!=0){
+    $query->condition('u.uid', $uid_aplicante, '=');
+  }
+  $query->condition('ur.rid', 4, '=');
+  $items = $query->execute()->fetchAll();
+
+  $aplicantes = array();
+  foreach ($items as $key => $value) {
+    /*carreras para aplicar*/
+    //$query2->join('taxonomy_term_data', 'ttd', '(ttd.tid = fdfcpa.field_carrera_para_aplicar_target_id)');
+    $query2 = db_select('field_data_field_carrera_para_aplicar', 'fdfcpa');
+    $query2->join('users', 'u', '(u.uid = fdfcpa.entity_id)');
+    $query2->join('node', 'nc', '(nc.nid = fdfcpa.field_carrera_para_aplicar_target_id)');
+    $query2->fields('fdfcpa', array('field_carrera_para_aplicar_target_id'));   
+    $query2->fields('nc', array('title'));   
+    $query2->condition('u.uid', $value->uid, '=');
+    $items2 = $query2->execute()->fetchAll();
+
+    /*Enlaces*/
+    $query3 = db_select('field_data_field_elances', 'fdfe');
+    $query3->join('users', 'u', '(u.uid = fdfe.entity_id)');
+    $query3->fields('fdfe', array('field_elances_value'));
+    $query3->condition('u.uid', $value->uid, '=');
+    $items3 = $query3->execute()->fetchAll();
+
+    /*Aplicaciones*/
+    $query4 = db_select('users', 'u');
+    $query4->join('field_data_field_puesto', 'fdfpu', '(fdfpu.entity_id = u.uid)');
+    $query4->join('node', 'puesto', '(puesto.nid = fdfpu.field_puesto_target_id)');
+    $query4->join('bitacora_aplicante', 'ba', '(fdfpu.field_puesto_target_id = ba.nid_puesto)');
+    $query4->join('field_data_field_pais', 'fdfp', '(fdfp.entity_id = puesto.nid)');
+    $query4->join('node', 'pais', '(pais.nid = fdfp.field_pais_target_id)');
+    $query4->fields('puesto', array('nid', 'title'));
+    $query4->fields('ba', array('fecha' ,'tid_estado'));
+    $query4->fields('pais', array('title'));
+    $query4->condition('u.uid', $value->uid, '=');
+    //$query4->condition('pais.nid', 10, '=');
+    $query4->orderBy('fdfpu.field_puesto_target_id', 'DESC');
+    $query4->orderBy('ba.fecha', 'DESC');
+    $items4 = $query4->execute()->fetchAll();    
+
+    /*envio de la informacion*/
+    $query5 = db_select('field_data_field_envio_de_informacion', 'fdfei');
+    $query5->join('users', 'u', '(u.uid = fdfei.entity_id)');
+    $query5->join('taxonomy_term_data', 'ttd', '(ttd.tid = fdfei.field_envio_de_informacion_tid)');
+    $query5->fields('ttd', array('name'));
+    $query5->condition('u.uid', $value->uid, '=');
+    $items5 = $query5->execute()->fetchAll();
+
+    //extraer el primer dato de cada puesto
+    $id_puesto = 0;
+    $aplicaciones = array();
+    foreach ($items4 as $key => $value) {
+      if ($id_puesto != $value->nid){
+        $id_puesto = $value->nid;
+        array_push($aplicaciones, array('nid' => $value->nid, 'title' => $value->title, 'fecha' => $value->fecha, 'tid_estado' => $value->tid_estado, 'pais_title' => $value->pais_title));
+      }
+    }
+
+    array_push($aplicantes, array('info' => $items, 'enlaces' => $items3, 'carreras para aplicar' => $items2, 'notificaciones' => $items5, 'aplicaciones' => $aplicaciones));
+  }
+  //exit(var_dump($aplicantes));
+  return $aplicantes;
+
+  //return $items2;
+}
+
+function estado_aplicante_consultar_existencia_correo($u_email) {
+
+  $encontrado = false;
+  $query = db_select('users', 'u');
+  $query->fields('u', array('mail'));
+  $query->condition('u.mail', $u_email, '=');
+  $query->range(0,1);//LIMIT to 2 records
+  $items = $query->execute()->fetchAll();
+  
+  if(count($items) > 0){
+    $encontrado = true;
+  }
+  return array('encontrado' => $encontrado);
+}
+
+function estado_aplicante_obtener_detalle_aplicacion($uid_aplicante, $nid_puesto) {
+ 
+  $query = db_select('bitacora_aplicante', 'b');
+  $query->join('taxonomy_term_data', 'ttd', '(ttd.tid = b.tid_estado)');
+  $query->fields('ttd', array('tid','name'));
+  $query->condition('b.uid_aplicante', $uid_aplicante, '=');
+  $query->condition('b.nid_puesto', $nid_puesto, '=');
+  $query->orderBy('fecha', 'DESC');
+  $query->range(0,1);//LIMIT to 2 records
+  $items = $query->execute()->fetchAll();
+
+  return $items;
+
+}
+
+/**
+ * Obtener fecha de aplicacion
+ */
+function estado_aplicante_cambiar_clave($u_email, $clave, $token) {
+  $status = 0;
+  $user = user_load_by_mail($u_email);
+    require_once DRUPAL_ROOT . '/' . variable_get('password_inc', 'includes/password.inc');
+    $hashthepass = user_hash_password(trim($clave));
+    // Abort if the hashing failed and returned FALSE.
+    if (!$hashthepass) {
+      $status = 0;
+    } else {
+
+      //buscar token
+      $result = db_select('cambio_clave', 'cc')
+            ->fields('cc')
+            ->condition('token', $token,'=')
+            ->countQuery()
+            ->execute()
+            ->fetchField();
+      if($result > 0){
+        $update = db_update('users')
+          ->fields(array(
+            'pass' => $hashthepass
+          ))
+          ->condition('uid', $user->uid)       
+          ->execute();
+          if($update){
+            $status = 1;
+          }
+      }
+    }
+    return array('status' => $status);
+}
+
+/**
+ * Obtener fecha de aplicacion
+ */
+function estado_aplicante_obtener_fecha_aplicacion($uid_aplicante, $nid_puesto) {
+  // Compose query
+  $result = db_select('bitacora_aplicante', 'b')
+        ->fields('b',array('fecha'))
+        ->condition('uid_aplicante', $uid_aplicante,'=')
+        ->condition('nid_puesto', $nid_puesto,'=')
+        ->execute()
+        ->fetchAll();
+  return $result;
+
+}
+
+function estado_aplicante_obtener_total_aplicaciones($uid_aplicante) {
+  // Compose query
+  $query = db_select('bitacora_aplicante', 'b');
+  $query->join('node', 'n', '(n.nid = b.nid_puesto)');
+  $query->join('field_data_field_puesto', 'fdfp', '(fdfp.field_puesto_target_id = b.nid_puesto)');
+  $query->fields('b');
+  $query->condition('b.uid_aplicante', $uid_aplicante,'=');
+  $query->condition('fdfp.entity_id', $uid_aplicante,'=');
+  $query->condition('n.status', 1,'=');
+  $query->groupBy('b.nid_puesto');
+  $query->countQuery();
+  //$query->execute();
+  $result = $query->execute()->fetchAll();
+  return $result;
+
+}
+/**
+ * Implements hook_user_update()
+ */
+ //actualizar el estado del aplicante
+ function estado_aplicante_user_update(&$edit, $account, $category){
+  global $user;
+  $user_aplicante = user_load_by_mail($edit['mail']);
+  //variables
+  //se define como default los datos segun aplicante
+  $uid_admin = $user_aplicante->uid;
+  $uid_aplicante = $user_aplicante->uid;
+  $tid_estado = 27;  //es el tid del estado "no leido"
+  $tid_liberar_estado = 0;  //es el tid del estado "no leido"
+  $liberar_estado = false;
+  $fecha = time(); //fecha actual en unixtimestamp
+
+  //actualiar la fecha de la modificacion
+  $estado_general_updated = db_update('aplicante_estado') // Table name no longer needs {}
+  ->fields(array(
+    'modified' => $fecha,
+  ))
+  ->condition('uid_aplicante', $uid_aplicante, '=')
+  ->execute();
+
+  //validar si vienen datos para actualizar
+  if (!empty($edit['field_estado']['und']) && (in_array('administrador país', $user->roles) or in_array('administrador regional', $user->roles) or in_array('administrador junior', $user->roles) or in_array('administrador blip', $user->roles))) {
+    $tid_estado = $edit['field_estado']['und'][0]['tid'];
+    $tid_liberar_estado = $edit['field_liberar_estado']['und'][0]['tid'];
+    if($tid_liberar_estado == 88){
+      $liberar_estado = true;
+    }
+  }
+
+  if((in_array('administrador país', $user->roles)) or (in_array('administrador regional', $user->roles)) or (in_array('administrador junior', $user->roles) or in_array('administrador blip', $user->roles))){
+
+    if (!empty($edit['field_ultimo_puesto_aplicado']['und'])) {
+       //verificar cuantos elementos se van a actualizar
+      foreach ($edit['field_ultimo_puesto_aplicado']['und'] as $key => $value) {
+
+        $result = db_select('bitacora_aplicante', 'b')
+          ->fields('b')
+          ->condition('uid_aplicante', $uid_aplicante,'=')
+          ->condition('nid_puesto', $value['target_id'],'=')
+          ->countQuery()
+          ->execute()
+          ->fetchField();
+
+        $uid_admin = $user->uid;
+         //extraer las otras aplicaciones
+        $query = db_select('bitacora_aplicante', 'b');
+        //$query->join('taxonomy_term_data', 'ttd', '(ttd.tid = b.tid_estado)');
+        $query->fields('b');
+        $query->condition('b.uid_aplicante', $uid_aplicante, '=');
+        $query->condition('b.nid_puesto', $value['target_id'], '<>');
+        $items = $query->execute()->fetchAll();
+
+        $aplicaciones = array();
+        foreach ($items as $key2 => $value2) {
+          //buscar en el arreglo si ya se ingreso el id del puesto
+          if(!in_array($value2->nid_puesto, $aplicaciones)){
+            $aplicaciones [] = $value2->nid_puesto;
+          }
+        }
+        if($result >= 1){
+          //si el usuario es aplicante, el user administrador que esta ligado es admin
+            //si al actualizar el estado, este es de tipo lista negra, se actualizara todos los estados a lista negra
+          if ($tid_estado == 28){
+              actualizarBitacora($uid_aplicante, $value['target_id'], $uid_admin, $tid_estado, $fecha, $liberar_estado);
+              //utilizar el array de aplicaciones para actualizar las otras aplicaciones
+              foreach ($aplicaciones as $key => $value) {
+                actualizarBitacora($uid_aplicante, $value, $uid_admin, $tid_estado, $fecha, $liberar_estado);
+              }
+          } else {
+            //verificar si el estado antes de cambiar pertenecia a "lista negra"
+
+            $query2 = db_select('bitacora_aplicante', 'b');
+            $query2->fields('b', array('tid_estado'));
+            $query2->condition('b.uid_aplicante', $uid_aplicante, '=');
+            $query2->condition('b.nid_puesto', $value['target_id'], '=');
+            $query2->orderBy('b.fecha', 'DESC');
+            $query2->range(0,1);//LIMIT to 2 records
+            $items2 = $query2->execute()->fetchAll();
+
+            $estado = 0;
+            foreach ($items2 as $key2 => $value2) {
+              $estado = $value2->tid_estado;
+            }
+            if($estado == 28){
+              // se reestablecera todos los otros estados
+              foreach ($aplicaciones as $key2 => $value2) {
+                //buscar el ultimo registro de cada aplicacion que no sea 'lista negra'
+                //verificar si el estado antes de cambiar pertenecia a "lista negra"
+                $query3 = db_select('bitacora_aplicante', 'b');
+                $query3->fields('b', array('tid_estado'));
+                $query3->condition('b.uid_aplicante', $uid_aplicante, '=');
+                $query3->condition('b.nid_puesto', $value2, '=');
+                $query3->condition('b.tid_estado', 28, '<>');
+                $query3->orderBy('fecha', 'DESC');
+                $query3->range(0,1);//LIMIT to 2 records
+                $items3 = $query3->execute()->fetchAll();
+
+                $estado = 27;
+                foreach ($items3 as $key3 => $value3) {
+                  //if ($value3->tid_estado <> 28){
+                    $estado = $value3->tid_estado;
+                  //}
+                }
+                actualizarBitacora($uid_aplicante, $value2, $uid_admin, $estado, $fecha, $liberar_estado);
+              }
+              //si no encontro datos, se agrega dentro de la bitacora
+              //en caso contrario, se actualiza agregando un nuevo elemento en la bitacora
+              actualizarBitacora($uid_aplicante, $value['target_id'], $uid_admin, $tid_estado, $fecha, $liberar_estado);
+            } else {
+              //actualizacion normal de la bitacora
+              actualizarBitacora($uid_aplicante, $value['target_id'], $uid_admin, $tid_estado, $fecha, $liberar_estado);
+            }
+          }
+        }
+      }
+    }
+  }else if(in_array('aplicante', $user->roles)){
+    if (!empty($edit['field_puesto']['und'])) {
+       //verificar cuantos elementos se van a actualizar
+      foreach ($edit['field_puesto']['und'] as $key => $value) {
+        $result = db_select('bitacora_aplicante', 'b')
+          ->fields('b')
+          ->condition('uid_aplicante', $uid_aplicante,'=')
+          ->condition('nid_puesto', $value['target_id'],'=')
+          ->countQuery()
+          ->execute()
+          ->fetchField();
+          //actualizar la tabla personaizada bitacora
+        if($result < 1){
+
+          $query = db_select('bitacora_aplicante', 'b');
+          //$query->join('taxonomy_term_data', 'ttd', '(ttd.tid = b.tid_estado)');
+          $query->fields('b');
+          $query->condition('b.uid_aplicante', $uid_aplicante, '=');
+          $query->condition('b.nid_puesto', $value['target_id'], '<>');
+          $items = $query->execute()->fetchAll();
+
+          $aplicaciones = array();
+          foreach ($items as $key2 => $value2) {
+            //buscar en el arreglo si ya se ingreso el id del puesto
+            if(!in_array($value2->nid_puesto, $aplicaciones)){
+              $aplicaciones [] = $value2->nid_puesto;
+            }
+          }
+          $encontrado = false;
+          $tid_estado = 27;
+          foreach ($aplicaciones as $key3 => $value3) {
+              //verificar si tiene aplicaciones con estado 'lista negra' 
+           $result2 = db_select('bitacora_aplicante', 'b')
+            ->fields('b', array('tid_estado'))
+            ->condition('uid_aplicante', $uid_aplicante,'=')
+            ->condition('nid_puesto', $value3,'=')
+            ->orderBy('fecha','DESC')
+            ->range(0,1);
+            $items4 = $result2->execute()->fetchAll();
+
+            foreach ($items4 as $value5) {
+              if($value5->tid_estado == 28){
+                //si encontramos almenos un registro en la tabla con la asignacion de lista negra, se auto asignara el nuevo registro como lista negra
+                $encontrado = true;
+              }
+            }            
+          }
+
+          if($encontrado == true){
+              $tid_estado = 28;
+          }
+          actualizarBitacora($uid_aplicante, $value['target_id'], $uid_admin, $tid_estado, $fecha, $liberar_estado);
+        }
+      }     
+    }
+  }
+}
+
+function actualizarBitacora($uid_aplicante, $nid_puesto, $uid_admin, $tid_estado, $fecha, $liberar_estado=false){
+  $insert = db_insert('bitacora_aplicante')
+  ->fields(array(
+      'uid_aplicante' => $uid_aplicante,
+      'nid_puesto' => $nid_puesto,
+      'uid_admin' => $uid_admin,
+      'tid_estado' => $tid_estado,
+      'fecha' => $fecha,
+    ))
+  ->execute();
+
+  //buscar en el registro del estado general y verificar si el estado a actualizar es mayor que el actual
+  $result = db_select('aplicante_estado', 'ae');
+  $result->fields('ae', array('tid_estado'));
+  $result->condition('uid_aplicante', $uid_aplicante,'=');
+  //->range(0,1);
+  $items = $result->execute()->fetchAll();
+  $tid_estado_general = 0;
+  foreach ($items as $key => $value) {
+    $tid_estado_general = $value->tid_estado;
+  }
+
+  if($liberar_estado == false){
+    //verificar
+    if($tid_estado > $tid_estado_general){
+      //actualizar
+      $estado_general_updated = db_update('aplicante_estado') // Table name no longer needs {}
+      ->fields(array(
+        'tid_estado' => $tid_estado,
+      ))
+      ->condition('uid_aplicante', $uid_aplicante, '=')
+      ->execute();
+    }
+  }else{
+    $estado_general_updated = db_update('aplicante_estado') // Table name no longer needs {}
+      ->fields(array(
+        'tid_estado' => $tid_estado,
+      ))
+      ->condition('uid_aplicante', $uid_aplicante, '=')
+      ->execute();
+  }
+
+  /*$result = db_select('aplicante_estado', 'ae')
+  ->fields('b', array('tid_estado'))
+  ->condition('uid_aplicante', $uid_aplicante,'=')
+  ->condition('nid_puesto', $nid_puesto,'=')
+  ->orderBy('fecha','DESC');
+  //->range(0,1);
+  $items = $result->execute()->fetchAll();
+
+  foreach ($items as $value) {
+    if($value->tid_estado == 28){
+      //si encontramos almenos un registro en la tabla con la asignacion de lista negra, se auto asignara el nuevo registro como lista negra
+      $encontrado = true;
+    }
+  }
+  //buscar en la tabla si ya existe un estado general previo, si no es asi se podria entender que es la primera ves que el usuario aplica
+  $insert = db_insert('aplicante_estado')
+  ->fields(array(
+      'uid_aplicante' => $uid_aplicante,
+      'tid_estado' => $tid_estado,
+      'fecha' => $fecha,
+    ))
+  ->execute(); */ 
+}
+
+function estado_aplicante_cron(){
+  //extraer_estados();
+}
+
+function extraer_estados($id_aplicante = ''){
+
+  $query = db_select('users', 'u');
+  $query->leftjoin('users_roles', 'ur', '(ur.uid = u.uid)');
+  //$query->leftjoin('aplicante_estado', 'ae', '(ae.uid_aplicante = u.uid)');
+  $query->leftjoin('field_data_field_nombre_y_apellidos', 'fdfna', '(fdfna.entity_id = u.uid)');
+  //$query->leftjoin('field_data_field_nacionalidad', 'fdfnac', '(fdfnac.entity_id = u.uid)');
+  $query->fields('u', array('uid','created'));
+  $query->fields('fdfna', array('field_nombre_y_apellidos_value'));
+  //$query->fields('ae', array('tid_estado'));
+  $query->condition('ur.rid', 4, '=');
+  //$query->condition('fdfnac.field_nacionalidad_iso2','CR', '=');
+  $rows = $query->execute()->fetchAll();
+
+  $aplicante = '';
+  $modified = 0;
+  foreach ($rows as $value) {
+    $aplicante = $value->uid;
+    $modified = $value->created;
+    $insert = db_insert('aplicante_estado')
+    ->fields(array(
+        'uid_aplicante' => $aplicante,
+        'tid_estado' => 27,
+        'modified' => $modified,
+      ))
+    ->execute(); 
+  }
+
+  //exit();
+
+  $result = db_select('field_data_field_puesto', 'fdfp');
+  $result->leftjoin('bitacora_aplicante', 'b', 'fdfp.entity_id = b.uid_aplicante');
+  $result->leftjoin('field_data_field_nacionalidad', 'fdfna', '(fdfna.entity_id = b.uid_aplicante)');
+  $result->leftjoin('users_roles', 'ur', '(ur.uid = b.uid_aplicante)');
+  $result->fields('b', array('tid_estado', 'nid_puesto', 'fecha'));
+  $result->fields('fdfp', array('entity_id', 'field_puesto_target_id'));
+  $result->condition('ur.rid', 4, '=');
+  $result->condition('fdfna.field_nacionalidad_iso2','CR', '=');
+  if($id_aplicante != ''){
+    $result->condition('fdfp.entity_id', $id_aplicante ,'=');
+  }
+  //->condition('nid_puesto', $nid_puesto,'=')
+  //$result->groupBy('b.nid_puesto');
+  $result->orderBy('fdfp.entity_id','ASC');
+  $result->orderBy('b.nid_puesto','ASC');
+  $result->orderBy('b.fecha','ASC');
+  $items = $result->execute()->fetchAll();
+
+  //utilzar la tabla de bitacora aplicante para extraer el estado general
+  
+  $aplicaciones = array();
+  $datos_aplicante = array();
+  $aplicante_actual = '';
+  $aplicante_anterior = '';
+  foreach ($items as $value) {
+    if($aplicante_actual == ''){
+      $aplicante_actual = $value->entity_id;
+      array_push($datos_aplicante, array('puesto' => $value->nid_puesto, 'estado' => $value->tid_estado, 'fecha' => $value->fecha, 'aplicante' => $value->entity_id));
+    }
+    if($aplicante_actual == $value->entity_id){
+      array_push($datos_aplicante, array('puesto' => $value->nid_puesto, 'estado' => $value->tid_estado, 'fecha' => $value->fecha, 'aplicante' => $value->entity_id));
+    } else {
+      $aplicante_actual = $value->entity_id;
+      array_push($aplicaciones, $datos_aplicante);
+      $datos_aplicante = array();
+      array_push($datos_aplicante, array('puesto' => $value->nid_puesto, 'estado' => $value->tid_estado, 'fecha' => $value->fecha, 'aplicante' => $value->entity_id));
+    }
+  }
+
+  //exit(var_dump($aplicaciones));
+  //exit();
+  //recorrer el arreglo para ingresar el valor mayor
+  foreach ($aplicaciones as $key => $value) {
+  $estado = 0;
+  $aplicante = '';
+    foreach ($value as $key2 => $value2) {
+      if($estado < $value2['estado']){
+        $estado = $value2['estado'];
+        $aplicante = $value2['aplicante'];
+      }
+    }
+
+    $update = db_update('aplicante_estado')
+    ->fields(array(
+      'tid_estado' => $estado
+    ))
+    ->condition('uid_aplicante', $aplicante)       
+    ->execute();
+  }
+}

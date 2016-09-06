@@ -1,0 +1,50 @@
+<?php
+/**
+ *
+ *  Implements hook_schema()
+ *
+ */
+function estado_aplicante_schema(){
+	$schema ['bitacora_aplicante'] = array(
+		'fields' => array(
+			'id' => array(
+				'type' => 'serial',
+				'unsigned' => TRUE,
+				'not null' => TRUE,
+			),
+			'uid_admin' => array(
+				'type' => 'int',
+				'length' => 32,
+				'not null' => TRUE,
+				'default' => 0,
+			),
+			'uid_aplicante' => array(
+				'type' => 'int',
+				'length' => 32,
+				'not null' => TRUE,
+				'default' => 0,
+			),
+			'nid_puesto' => array(
+				'type' => 'int',
+				'length' => 32,
+				'not null' => TRUE,
+				'default' => 0,
+			),
+			'tid_estado' => array(
+				'type' => 'int',
+				'length' => 32,
+				'not null' => TRUE,
+				'default' => 0,
+			),
+			'fecha' => array(
+				'type' => 'int',
+				'length' => 32,
+				'not null' => TRUE,
+				'default' => 0,
+			),
+
+		),
+	    'primary key' => array('id'),
+	);
+	return $schema;
+}

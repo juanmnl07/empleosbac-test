@@ -1,0 +1,13 @@
+cambios en base de datos:
+
+se clono el display del perfil
+se quito el parametro de activo
+se anadio parametro de user id con nombre user_id
+se cambio el campo de nacionalidad para q mostrara nombre de pais
+se cambio campo de nivel academico a texto sin formato
+
+Errores encontrados:
+form de registro no actualiza area de trabajo
+el url del cv en el view viene mal
+las areas de trabajo no salen en el view del aplicante
+el idioma no se puede leer en el view del aplicante

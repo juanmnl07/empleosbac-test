@@ -1,0 +1,4 @@
+<?php
+$lang['titulo'] = 'Desarrollo profesional en la Región. Desarrollo de talento humano.';
+$lang['meta_desc'] = 'BAC Credomatic da la oportunidad a sus colaboradores de desarrollar y potenciar sus talentos, innovando y aportando ideas para alcanzar el éxito personal y profesional.';
+$lang['meta_keywords'] = 'desarrollo profesional, Región, México, Centroamérica, desarrollo del talento humano,  desarrollar y potenciar talentos, éxito personal y profesional, puestos para,  disponibilidad de puestos, innovación, creatividad, liderazgo, excelencia laboral, inclusión laboral, discapacitados, discapacidad, crecimiento profesional';

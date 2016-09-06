@@ -1,0 +1,1456 @@
+<?php
+/**
+ * Implements of hook_services_resources().
+ */
+function bac_service_resource_services_resources() {
+  $api = array(
+    'puestos_listado_admin' => array(
+      'operations' => array(
+        'index' => array(
+          'help' => 'Retrieves posted puestos on admin page',
+          'callback' => '_bac_service_resource_puestos_admin_retrieve',
+          'access callback' => 'user_access',
+          'access arguments' => array('access content'),
+          'access arguments append' => FALSE,
+          'args' => array(
+            array(
+              'name' => 'page',
+              'type' => 'int',
+              'description' => 'Page to Pagination',
+              'source' => array('param' => 'page'),
+              'optional' => TRUE,
+              'default' => 0,
+            ),
+            array(
+              'name' => 'items_per_page',
+              'type' => 'int',
+              'description' => 'Items per Page to Pagination',
+              'source' => array('param' => 'items_per_page'),
+              'optional' => TRUE,
+              'default' => 10,
+            ),
+            array(
+              'name' => 'field_orden',
+              'type' => 'string',
+              'description' => 'Campo de ordenamiento en las tablas',
+              'source' => array('param' => 'field_orden'),
+              'optional' => TRUE,
+              'default' => '',
+            ),
+            array(
+              'name' => 'tipo_orden',
+              'type' => 'string',
+              'description' => 'Items per Page to Pagination',
+              'source' => array('param' => 'tipo_orden'),
+              'optional' => TRUE,
+              'default' => '',
+            ),            
+            array(
+              'name' => 'title_search',
+              'type' => 'string',
+              'description' => 'Title filter',
+              'source' => array('param' => 'title_search'),
+              'optional' => TRUE,
+              'default' => '',
+            ),
+            array(
+              'name' => 'pais',
+              'type' => 'array',
+              'description' => 'Filtro de Pais',
+              'source' => array('param' => 'pais'),
+              'optional' => TRUE,
+              'default' => '',
+            ),
+            array(
+              'name' => 'carrera',
+              'type' => 'array',
+              'description' => 'Filtro de Carrera',
+              'source' => array('param' => 'carrera'),
+              'optional' => TRUE,
+              'default' => '',
+            ),
+            array(
+              'name' => 'estado',
+              'type' => 'int',
+              'description' => 'Filtro de estado',
+              'source' => array('param' => 'estado'),
+              'optional' => TRUE,
+              'default' => '',
+            ),
+            array(
+              'name' => 'admin',
+              'type' => 'string',
+              'description' => 'Filtro de Admin',
+              'source' => array('param' => 'admin'),
+              'optional' => TRUE,
+              'default' => '',
+            ),
+          ),
+        ),
+      ),
+    ),
+    'puestos_listado_dashboard' => array(
+      'operations' => array(
+        'index' => array(
+          'help' => 'Retrieves posted puestos on admin page for dashboard',
+          'callback' => '_bac_service_resource_puestos_admin_dashboard_retrieve',
+          'access callback' => 'user_access',
+          'access arguments' => array('access content'),
+          'access arguments append' => FALSE,
+          'args' => array(
+            array(
+              'name' => 'items_per_page',
+              'type' => 'int',
+              'description' => 'Items per Page to Pagination',
+              'source' => array('param' => 'items_per_page'),
+              'optional' => TRUE,
+              'default' => 10,
+            ),
+            array(
+              'name' => 'field_orden',
+              'type' => 'string',
+              'description' => 'Campo de ordenamiento en las tablas',
+              'source' => array('param' => 'field_orden'),
+              'optional' => TRUE,
+              'default' => 10,
+            ),
+            array(
+              'name' => 'tipo_orden',
+              'type' => 'string',
+              'description' => 'Items per Page to Pagination',
+              'source' => array('param' => 'tipo_orden'),
+              'optional' => TRUE,
+              'default' => 10,
+            ),   
+            array(
+              'name' => 'pais',
+              'type' => 'array',
+              'description' => 'Filtro de Pais',
+              'source' => array('param' => 'pais'),
+              'optional' => TRUE,
+              'default' => '',
+            ),
+            
+          ),
+        ),
+      ),
+    ),
+    'dashboard_general_info' => array(
+      'operations' => array(
+        'index' => array(
+          'help' => 'Retrieves posted puestos on admin page for dashboard',
+          'callback' => '_bac_service_resource_dashboard_general_info_retrieve',
+          'access callback' => 'user_access',
+          'access arguments' => array('access content'),
+          'access arguments append' => FALSE,
+          'args' => array(
+            
+            array(
+              'name' => 'pais',
+              'type' => 'array',
+              'description' => 'Filtro de Pais',
+              'source' => array('param' => 'pais'),
+              'optional' => TRUE,
+              'default' => '',
+            ),
+            
+          ),
+        ),
+      ),
+    ),
+    'personas_listado_dashboard' => array(
+      'operations' => array(
+        'index' => array(
+          'help' => 'Retrieves newest registered people to dashboard page',
+          'callback' => '_bac_service_resource_personas_listado_dashboard_retrieve',
+          'access callback' => 'user_access',
+          'access arguments' => array('access content'),
+          'access arguments append' => FALSE,
+          'args' => array(
+            array(
+              'name' => 'items_per_page',
+              'type' => 'int',
+              'description' => 'Items per Page to Pagination',
+              'source' => array('param' => 'items_per_page'),
+              'optional' => TRUE,
+              'default' => 10,
+            ),
+            array(
+              'name' => 'field_orden',
+              'type' => 'string',
+              'description' => 'Campo de ordenamiento en las tablas',
+              'source' => array('param' => 'field_orden'),
+              'optional' => TRUE,
+              'default' => 10,
+            ),
+            array(
+              'name' => 'tipo_orden',
+              'type' => 'string',
+              'description' => 'Items per Page to Pagination',
+              'source' => array('param' => 'tipo_orden'),
+              'optional' => TRUE,
+              'default' => 10,
+            ),   
+            array(
+              'name' => 'pais',
+              'type' => 'array',
+              'description' => 'Filtro de Pais',
+              'source' => array('param' => 'pais'),
+              'optional' => TRUE,
+              'default' => '',
+            ),
+            
+          ),
+        ),
+      ),
+    ),
+    'webform_submission' => array(
+      'operations' => array(
+        'create' => array(
+          'help' => 'Create a webform submission',
+          'callback' => '_bac_service_resource_webform_submission_create',
+          'access callback' => 'user_access',
+          'access arguments' => array('access content'),
+          'access arguments append' => FALSE,
+          'args' => array(
+            array(
+              'name' => 'webform_id',
+              'type' => 'int',
+              'description' => 'webform_id',
+              'source' => array('data' => 'webform_id'),
+              'optional' => FALSE,
+              'default' => '',
+            ),
+            array(
+              'name' => 'nombre',
+              'type' => 'string',
+              'description' => 'nombre',
+              'source' => array('data' => 'nombre'),
+              'optional' => FALSE,
+              'default' => '',
+            ),
+            array(
+              'name' => 'correo',
+              'type' => 'string',
+              'description' => 'correo',
+              'source' => array('data' => 'correo'),
+              'optional' => FALSE,
+              'default' => '',
+            ),
+            array(
+              'name' => 'pais',
+              'type' => 'string',
+              'description' => 'pais',
+              'source' => array('data' => 'pais'),
+              'optional' => TRUE,
+              'default' => '',
+            ),
+            array(
+              'name' => 'telefono',
+              'type' => 'string',
+              'description' => 'telefono',
+              'source' => array('data' => 'telefono'),
+              'optional' => TRUE,
+              'default' => '',
+            ),
+            array(
+              'name' => 'comentario',
+              'type' => 'string',
+              'description' => 'comentario',
+              'source' => array('data' => 'comentario'),
+              'optional' => TRUE,
+              'default' => '',
+            ),
+          ),
+        ),
+      ),
+    ),
+    'aplicantes_listado_general_admin' => array(
+      'operations' => array(
+        'index' => array(
+          'help' => 'Devuelve el listado de todos los aplicantes que se ',
+          'callback' => '_bac_service_resource_aplicantes_listado_general_admin_retrieve',
+          'access callback' => 'user_access',
+          'access arguments' => array('access content'),
+          'access arguments append' => FALSE,
+          'args' => array(
+            array(
+              'name' => 'page',
+              'type' => 'int',
+              'description' => 'Page to Pagination',
+              'source' => array('param' => 'page'),
+              'optional' => TRUE,
+              'default' => 0,
+            ),
+            array(
+              'name' => 'items_per_page',
+              'type' => 'int',
+              'description' => 'Items per Page to Pagination',
+              'source' => array('param' => 'items_per_page'),
+              'optional' => TRUE,
+              'default' => 10,
+            ),
+            array(
+              'name' => 'field_orden',
+              'type' => 'string',
+              'description' => 'Campo de ordenamiento en las tablas',
+              'source' => array('param' => 'field_orden'),
+              'optional' => TRUE,
+              'default' => 10,
+            ),
+            array(
+              'name' => 'tipo_orden',
+              'type' => 'string',
+              'description' => 'Items per Page to Pagination',
+              'source' => array('param' => 'tipo_orden'),
+              'optional' => TRUE,
+              'default' => 10,
+            ),   
+            array(
+              'name' => 'pais',
+              'type' => 'array',
+              'description' => 'Filtro de Pais',
+              'source' => array('param' => 'pais'),
+              'optional' => TRUE,
+              'default' => '',
+            ),
+            array(
+              'name' => 'carrera',
+              'type' => 'array',
+              'description' => 'Filtro de Carrera',
+              'source' => array('param' => 'carrera'),
+              'optional' => TRUE,
+              'default' => '',
+            ),
+            array(
+              'name' => 'preparacion',
+              'type' => 'array',
+              'description' => 'Filtro de Nivel',
+              'source' => array('param' => 'preparacion'),
+              'optional' => TRUE,
+              'default' => '',
+            ),            
+            array(
+              'name' => 'genero',
+              'type' => 'array',
+              'description' => 'Filtro de Genero',
+              'source' => array('param' => 'genero'),
+              'optional' => TRUE,
+              'default' => '',
+            ),          
+            
+          ),
+        ),
+      ),
+    ),
+    'aplicantes_listado_puesto_admin' => array(
+      'operations' => array(
+        'index' => array(
+          'help' => 'Devuelve el listado de todos los aplicantes que se ',
+          'callback' => '_bac_service_resource_aplicantes_listado_puesto_admin_retrieve',
+          'access callback' => 'user_access',
+          'access arguments' => array('access content'),
+          'access arguments append' => FALSE,
+          'args' => array(
+            array(
+              'name' => 'page',
+              'type' => 'int',
+              'description' => 'Page to Pagination',
+              'source' => array('param' => 'page'),
+              'optional' => TRUE,
+              'default' => 0,
+            ),
+            array(
+              'name' => 'items_per_page',
+              'type' => 'int',
+              'description' => 'Items per Page to Pagination',
+              'source' => array('param' => 'items_per_page'),
+              'optional' => TRUE,
+              'default' => 10,
+            ),
+            array(
+              'name' => 'field_orden',
+              'type' => 'string',
+              'description' => 'Campo de ordenamiento en las tablas',
+              'source' => array('param' => 'field_orden'),
+              'optional' => TRUE,
+              'default' => 10,
+            ),
+            array(
+              'name' => 'tipo_orden',
+              'type' => 'string',
+              'description' => 'Items per Page to Pagination',
+              'source' => array('param' => 'tipo_orden'),
+              'optional' => TRUE,
+              'default' => 10,
+            ),   
+            array(
+              'name' => 'nid_puesto',
+              'type' => 'int',
+              'description' => 'Id del puesto',
+              'source' => array('param' => 'nid_puesto'),
+              'optional' => TRUE,
+              'default' => '',
+            ),                      
+            array(
+              'name' => 'estado',
+              'type' => 'array',
+              'description' => 'Filtro de Estado',
+              'source' => array('param' => 'estado'),
+              'optional' => TRUE,
+              'default' => '',
+            ),
+            array(
+              'name' => 'preparacion',
+              'type' => 'array',
+              'description' => 'Filtro de Nivel',
+              'source' => array('param' => 'preparacion'),
+              'optional' => TRUE,
+              'default' => '',
+            ),            
+            array(
+              'name' => 'genero',
+              'type' => 'array',
+              'description' => 'Filtro de Genero',
+              'source' => array('param' => 'genero'),
+              'optional' => TRUE,
+              'default' => '',
+            ),          
+            
+          ),
+        ),
+      ),
+    ),
+    'puestos_aplicados_por_aplicante' => array(
+      'operations' => array(
+        'index' => array(
+          'help' => 'Devuelve el listado de todos los aplicantes que se ',
+          'callback' => '_bac_service_resource_puestos_aplicados_por_aplicante_retrieve',
+          'access callback' => 'user_access',
+          'access arguments' => array('access content'),
+          'access arguments append' => FALSE,
+          'args' => array(
+            array(
+              'name' => 'uid',
+              'type' => 'int',
+              'description' => 'ID del aplicante',
+              'source' => array('param' => 'uid'),
+              'optional' => TRUE,
+              'default' => 0,
+            ),
+                      
+            
+          ),
+        ),
+      ),
+    ),
+    'metatag' => array(
+      'operations' => array(
+        'index' => array(
+          'help' => 'Devuelve todos los metatag del nodo especificado',
+          'callback' => '_bac_service_resource_obtener_metatags',
+          'access callback' => 'user_access',
+          'access arguments' => array('access content'),
+          'access arguments append' => FALSE,
+          'args' => array(
+            array(
+              'name' => 'nid',
+              'type' => 'int',
+              'description' => 'ID del nodo',
+              'source' => array('param' => 'nid'),
+              'optional' => TRUE,
+              'default' => 0,
+            ),
+                      
+            
+          ),
+        ),
+      ),
+    ),
+  );
+  return $api;
+}
+
+
+/**
+ * Callback function for metatag retrieve
+ */
+function _bac_service_resource_obtener_metatags($nid) {
+  //consultar en la base de datos todos los metatags del nodo
+  $node = node_load($nid);
+  //obtener los datos requeridos
+  return array('metatags' => $node->metatags);
+}
+
+/**
+ * Callback function for personas_listado_dashboard retrieve
+ */
+function _bac_service_resource_puestos_aplicados_por_aplicante_retrieve($uid) {
+  // Check for mad values
+  return bac_service_resource_puestos_aplicados_por_aplicante_items($uid);
+
+
+}
+
+
+/**
+ * Gets personas_listado_dashboard posts
+ */
+function bac_service_resource_puestos_aplicados_por_aplicante_items($uid = 0) {
+
+  //para obtener ultimo estado según la fecha mas reciente
+  $query_fecha_max = db_select('bitacora_aplicante', 'bitacora');
+  $query_fecha_max->fields('bitacora', array('uid_aplicante', 'nid_puesto'));
+  $query_fecha_max->addExpression('MAX(bitacora.fecha)', 'max_fecha');
+  $query_fecha_max->groupBy('bitacora.uid_aplicante');
+  $query_fecha_max->groupBy('bitacora.nid_puesto');
+
+  // Consulta de peustos
+  $query = db_select('field_revision_field_puesto', 'puestos_aplicados');
+  $query->fields('puestos_aplicados', array('field_puesto_target_id'));
+  $query->fields('nodo_puesto', array('title'));
+  $query->fields('descripcion', array('body_value'));
+  $query->fields('estado', array('tid_estado', 'uid_aplicante', 'nid_puesto'));
+  $query->join('node', 'nodo_puesto', '(nodo_puesto.nid = puestos_aplicados.field_puesto_target_id)');
+  $query->join('field_revision_body', 'descripcion', '(nodo_puesto.nid = descripcion.entity_id) and (descripcion.entity_type = \'node\')');
+  $query->addJoin('LEFT OUTER', $query_fecha_max, 'estado_fecha_maxima', '('.$uid.' = estado_fecha_maxima.uid_aplicante) and (puestos_aplicados.field_puesto_target_id = estado_fecha_maxima.nid_puesto)');
+  $query->leftjoin('bitacora_aplicante', 'estado' , '(estado_fecha_maxima.uid_aplicante = estado.uid_aplicante) and (puestos_aplicados.field_puesto_target_id = estado.nid_puesto) and (estado_fecha_maxima.max_fecha = estado.fecha)');
+  
+  
+
+  // Condicion de tipo de contenido
+  $query->condition('puestos_aplicados.entity_id', $uid, '=');// que esté activo el usuario
+  $query->condition('nodo_puesto.status', 1,'=');
+
+  $query->groupBy('puestos_aplicados.field_puesto_target_id');
+
+
+  
+
+
+  //ejecuta la consulta
+  $result = $query->execute(); 
+
+  //formatea los resultados
+  $items = $result->fetchAll();
+
+
+
+
+ 
+
+  return array('items' => $items,
+              
+              );
+
+  //ejecuta la consulta de puestos.
+}
+
+
+/**
+ * Callback function for personas_listado_dashboard retrieve
+ */
+function _bac_service_resource_aplicantes_listado_puesto_admin_retrieve($page, $items_per_page, $field_orden, $tipo_orden, $nid_puesto,  $estado, $preparacion, $genero) {
+  // Check for mad values
+  return bac_service_resource_aplicantes_listado_puesto_admin_items($page, $items_per_page, $field_orden, $tipo_orden, $nid_puesto,  $estado, $preparacion, $genero);
+
+
+}
+
+
+/**
+ * Gets personas_listado_dashboard posts
+ */
+function bac_service_resource_aplicantes_listado_puesto_admin_items($page = 0, $items_per_page = 10, $field_orden, $tipo_orden, $nid_puesto = 0, $estado = "", $preparacion = "", $genero = "") {
+
+  //para obtener ultimo estado según la fecha mas reciente
+  $query_fecha_max = db_select('bitacora_aplicante', 'bitacora');
+  $query_fecha_max->fields('bitacora', array('uid_aplicante', 'nid_puesto'));
+  $query_fecha_max->addExpression('MAX(bitacora.fecha)', 'max_fecha');
+  $query_fecha_max->groupBy('bitacora.uid_aplicante');
+  $query_fecha_max->groupBy('bitacora.nid_puesto');
+
+  //para conseguir fecha de aplicación
+  $query_fecha_min = db_select('bitacora_aplicante', 'bitacora');
+  $query_fecha_min->fields('bitacora', array('uid_aplicante', 'nid_puesto'));
+  $query_fecha_min->addExpression('MIN(bitacora.fecha)', 'min_fecha');
+  $query_fecha_min->groupBy('bitacora.uid_aplicante');
+  $query_fecha_min->groupBy('bitacora.nid_puesto');
+
+
+
+  // Consulta de peustos
+  $query = db_select('users', 'u');
+  $query->fields('u', array('uid', 'created', 'name'));
+  $query->fields('nombre_comp', array('field_nombre_y_apellidos_value'));
+  $query->fields('imagen_perfil', array('uri'));
+  $query->fields('nivel_academico_taxonomy', array('name'));
+  $query->fields('fecha_nacimiento', array('field_fecha_de_nacimiento_value'));
+  $query->fields('estado_fecha_minima', array('nid_puesto', 'min_fecha'));
+  $query->fields('estado', array('tid_estado'));
+  $query->fields('estado_taxonomy', array('name'));
+
+  $query->leftjoin('users_roles', 'roles', '(u.uid = roles.uid)');  
+  $query->leftjoin('field_revision_field_nombre_y_apellidos', 'nombre_comp', '(u.uid = nombre_comp.entity_id) and (nombre_comp.entity_type = \'user\')'); 
+  $query->leftjoin('field_revision_field_fecha_de_nacimiento', 'fecha_nacimiento' , '(u.uid = fecha_nacimiento.entity_id) and (fecha_nacimiento.entity_type = \'user\')');
+  $query->leftjoin('field_revision_field_imagen_perfil', 'fid_imagen' , '(u.uid = fid_imagen.entity_id) and (fid_imagen.entity_type = \'user\')');
+  $query->leftjoin('file_managed', 'imagen_perfil' , '(fid_imagen.field_imagen_perfil_fid = imagen_perfil.fid) and (imagen_perfil.status = 1)');
+  $query->addJoin('LEFT OUTER', $query_fecha_min, 'estado_fecha_minima', '(u.uid = estado_fecha_minima.uid_aplicante) and ('.$nid_puesto.' = estado_fecha_minima.nid_puesto)');
+  $query->addJoin('LEFT OUTER', $query_fecha_max, 'estado_fecha_maxima', '(u.uid = estado_fecha_maxima.uid_aplicante) and ('.$nid_puesto.' = estado_fecha_maxima.nid_puesto)');
+  $query->leftjoin('bitacora_aplicante', 'estado' , '(u.uid = estado.uid_aplicante) and (estado.fecha = estado_fecha_maxima.max_fecha)');
+  $query->leftjoin('taxonomy_term_data', 'estado_taxonomy' , '(estado.tid_estado = estado_taxonomy.tid)');
+  $query->leftjoin('field_revision_field_nivel_academico', 'nivel_academico' , '(u.uid = nivel_academico.entity_id) and (nivel_academico.entity_type = \'user\')');
+  $query->leftjoin('taxonomy_term_data', 'nivel_academico_taxonomy' , '(nivel_academico.field_nivel_academico_tid = nivel_academico_taxonomy.tid)');
+  $query->leftjoin('field_revision_field_genero', 'genero' , '(u.uid = genero.entity_id) and (genero.entity_type = \'user\')');
+
+  
+
+  // Condicion de tipo de contenido
+  $query->condition('u.status', '1', '=');// que esté activo el usuario
+  $query->condition('roles.rid', '4', '='); //rol de aplicante
+
+
+
+  //Condiciones para filtros
+  if($nid_puesto !== null and  $nid_puesto > 0){
+      $query->condition('estado.nid_puesto', $nid_puesto, '=');
+  }
+
+  if($preparacion !== null){
+      $query->condition('nivel_academico.field_nivel_academico_tid', $preparacion, 'IN');
+    
+  }
+ 
+  if($genero !== null){
+      $query->condition('genero.field_genero_value', $genero, 'IN');
+    
+  }
+
+    if($estado !== null){
+      $query->condition('estado.tid_estado', $estado, 'IN');
+    
+  }
+
+  
+  
+  
+  $query->groupBy('u.uid');
+
+    //order-by según columnas
+
+  if($field_orden!== null){
+    if($field_orden == "nombre"){
+      $query->orderBy('nombre_comp.field_nombre_y_apellidos_value', $tipo_orden);
+    }else if($field_orden == "nivel"){
+      $query->orderBy('nivel_academico_taxonomy.name', $tipo_orden);
+    }else if($field_orden == "edad"){
+      $query->orderBy('fecha_nacimiento.field_fecha_de_nacimiento_value', $tipo_orden);
+    }else if($field_orden == "cuando_ap"){
+      $query->orderBy('estado_fecha_minima.min_fecha', $tipo_orden);
+    }else if($field_orden == "estado"){
+      $query->orderBy('estado_taxonomy.name', $tipo_orden);
+    }else{
+      $query->orderBy('u.created', 'DESC');
+    }
+  }else{
+    $query->orderBy('u.created', 'DESC');
+  }
+
+  //obtiene el total de la consulta sin limit
+  $result_total = $query->execute();
+  $result_total_fetch = $result_total->fetchAll();
+  $items_total = array();
+  foreach($result_total_fetch as $value) {    
+    array_push($items_total, $value->uid);
+  }
+  
+  $row_count_total = $result_total->rowcount();
+
+
+
+  // Limited by items?
+  $offset = 0;
+  if ($items_per_page) {
+    if($page>0){
+      $offset = $page*$items_per_page;
+    }
+    $query->range($offset, $items_per_page);
+  }
+
+
+  //ejecuta la consulta
+  $result = $query->execute(); 
+
+  //formatea los resultados
+  $items = $result->fetchAll();
+
+  //obtiene el total de resultados consultados
+  $rowcount = $result->rowCount();
+
+
+  //calcula el total de paginas que tiene la consulta
+  $total_pages = floor($row_count_total/$items_per_page);
+
+  if (($row_count_total%$items_per_page)>0){
+    $total_pages++;
+  }
+  //hay que restarle uno ya que las paginas comienzan a contarse desde 0 en codeigniter
+  $total_pages = $total_pages-1;
+
+  //muestra los display start y end
+
+  if ($rowcount>0){
+    $display_start = $offset+1;
+  }else{
+    $display_start = $offset;
+  }
+  
+  $display_end = $offset + $rowcount;
+
+  return array('items' => $items,
+              'items_total' => $items_total,
+              'rowcount' => $rowcount,
+              'display_start' => $display_start,
+              'display_end' => $display_end,
+              'items_per_page' => $items_per_page,
+              'total_results' => $row_count_total,
+              'page' => $page,
+              'total_pages' => $total_pages
+              );
+
+  //ejecuta la consulta de puestos.
+ 
+}
+
+
+/**
+ * Callback function for personas_listado_dashboard retrieve
+ */
+function _bac_service_resource_aplicantes_listado_general_admin_retrieve($page, $items_per_page, $field_orden, $tipo_orden, $pais, $carrera, $preparacion, $genero) {
+  // Check for mad values
+  return bac_service_resource_aplicantes_listado_general_admin_items($page, $items_per_page, $field_orden, $tipo_orden, $pais, $carrera, $preparacion, $genero);
+
+
+}
+
+
+/**
+ * Gets personas_listado_dashboard posts
+ */
+function bac_service_resource_aplicantes_listado_general_admin_items($page = 0, $items_per_page = 10, $field_orden, $tipo_orden, $pais = "", $carrera = "", $preparacion = "", $genero = "") {
+
+
+  //Subquery para obtener total de aplicantes por puesto
+  $query_inner = db_select('field_revision_field_puesto', 'puestos_aplicados');
+  $query_inner->fields('puestos_aplicados', array('entity_id'));
+  $query_inner->addExpression('Count(puestos_aplicados.field_puesto_target_id)', 'count_puestos');
+  $query_inner->join('node', 'nodo_puesto', '(nodo_puesto.nid = puestos_aplicados.field_puesto_target_id)');
+  $query_inner->condition('nodo_puesto.status', 1,'=');
+  $query_inner->groupBy('puestos_aplicados.entity_id');
+
+
+
+  // Consulta de peustos
+  $query = db_select('users', 'u');
+  $query->fields('u', array('uid', 'created', 'name'));
+  $query->fields('nombre_comp', array('field_nombre_y_apellidos_value'));
+  $query->fields('imagen_perfil', array('uri'));
+  $query->fields('puestos', array('count_puestos'));
+  $query->fields('fecha_nacimiento', array('field_fecha_de_nacimiento_value'));
+  $query->fields('nacionalidad', array('name'));
+  $query->leftjoin('users_roles', 'roles', '(u.uid = roles.uid)');  
+  $query->leftjoin('field_revision_field_nombre_y_apellidos', 'nombre_comp', '(u.uid = nombre_comp.entity_id) and (nombre_comp.entity_type = \'user\')'); 
+  $query->leftjoin('field_revision_field_fecha_de_nacimiento', 'fecha_nacimiento' , '(u.uid = fecha_nacimiento.entity_id) and (fecha_nacimiento.entity_type = \'user\')');
+  $query->leftjoin('field_revision_field_imagen_perfil', 'fid_imagen' , '(u.uid = fid_imagen.entity_id) and (fid_imagen.entity_type = \'user\')');
+  $query->leftjoin('file_managed', 'imagen_perfil' , '(fid_imagen.field_imagen_perfil_fid = imagen_perfil.fid) and (imagen_perfil.status = 1)');
+  $query->leftjoin('field_revision_field_nacionalidad', 'nacionalidad_iso', '(u.uid = nacionalidad_iso.entity_id) and (nacionalidad_iso.entity_type = \'user\')');
+  $query->leftjoin('countries_country', 'nacionalidad', '(nacionalidad_iso.field_nacionalidad_iso2 = nacionalidad.iso2)');
+  $query->addJoin('LEFT OUTER', $query_inner, 'puestos', 'u.uid = puestos.entity_id');
+  $query->leftjoin('field_revision_field_carrera_para_aplicar', 'carrera', '(u.uid = carrera.entity_id)  and (carrera.entity_type = \'user\')');
+  $query->leftjoin('field_revision_field_pais_trabajar', 'pais_trabajar' , '(u.uid = pais_trabajar.entity_id) and (pais_trabajar.entity_type = \'user\')');
+  $query->leftjoin('field_revision_field_nivel_academico', 'nivel_academico' , '(u.uid = nivel_academico.entity_id) and (nivel_academico.entity_type = \'user\')');
+  $query->leftjoin('field_revision_field_genero', 'genero' , '(u.uid = genero.entity_id) and (genero.entity_type = \'user\')');
+  
+
+  // Condicion de tipo de contenido
+  $query->condition('u.status', '1', '=');// que esté activo el usuario
+  $query->condition('roles.rid', '4', '='); //rol de aplicante
+
+
+
+  //Condiciones para filtros
+  if($pais !== null and  $pais[0] > 0){
+      $query->condition('pais_trabajar.field_pais_trabajar_target_id', $pais, 'IN');
+  }
+
+  if($carrera !== null){
+      $query->condition('carrera.field_carrera_para_aplicar_target_id', $carrera, 'IN');
+  }
+
+  if($preparacion !== null){
+      $query->condition('nivel_academico.field_nivel_academico_tid', $preparacion, 'IN');
+    
+  }
+ 
+  if($genero !== null){
+      $query->condition('genero.field_genero_value', $genero, 'IN');
+    
+  }
+
+
+
+  
+  $query->groupBy('u.uid');
+
+    //order-by según columnas
+
+  if($field_orden!== null){
+    if($field_orden == "nombre"){
+      $query->orderBy('nombre_comp.field_nombre_y_apellidos_value', $tipo_orden);
+    }else if($field_orden == "puestos_apli"){
+      $query->orderBy('puestos.count_puestos', $tipo_orden);
+    }else if($field_orden == "edad"){
+      $query->orderBy('fecha_nacimiento.field_fecha_de_nacimiento_value', $tipo_orden);
+    }else if($field_orden == "nacion"){
+      $query->orderBy('nacionalidad.name', $tipo_orden);
+    }else if($field_orden == "fecha_reg"){
+      $query->orderBy('u.created', $tipo_orden);
+    }else{
+      $query->orderBy('u.created', 'DESC');
+    }
+  }else{
+    $query->orderBy('u.created', 'DESC');
+  }
+
+  //obtiene el total de la consulta sin limit
+  $result_total = $query->execute();
+  $result_total_fetch = $result_total->fetchAll();
+  $items_total = array();
+  foreach($result_total_fetch as $value) {    
+    array_push($items_total, $value->uid);
+  }
+  
+  $row_count_total = $result_total->rowcount();
+
+  // Limited by items?
+  $offset = 0;
+  if ($items_per_page) {
+    if($page>0){
+      $offset = $page*$items_per_page;
+    }
+    $query->range($offset, $items_per_page);
+  }
+
+
+  //ejecuta la consulta
+  $result = $query->execute(); 
+
+  //formatea los resultados
+  $items = $result->fetchAll();
+
+  //obtiene el total de resultados consultados
+  $rowcount = $result->rowCount();
+
+
+  //calcula el total de paginas que tiene la consulta
+  $total_pages = floor($row_count_total/$items_per_page);
+
+  if (($row_count_total%$items_per_page)>0){
+    $total_pages++;
+  }
+  //hay que restarle uno ya que las paginas comienzan a contarse desde 0 en codeigniter
+  $total_pages = $total_pages-1;
+
+  //muestra los display start y end
+
+  if ($rowcount>0){
+    $display_start = $offset+1;
+  }else{
+    $display_start = $offset;
+  }
+  
+  $display_end = $offset + $rowcount;
+
+  return array('items' => $items,
+              'items_total' => $items_total,
+              'rowcount' => $rowcount,
+              'display_start' => $display_start,
+              'display_end' => $display_end,
+              'items_per_page' => $items_per_page,
+              'total_results' => $row_count_total,
+              'page' => $page,
+              'total_pages' => $total_pages
+              );
+
+  //ejecuta la consulta de puestos.
+ 
+}
+
+
+
+/**
+ * Callback function for personas_listado_dashboard retrieve
+ */
+function _bac_service_resource_personas_listado_dashboard_retrieve($items_per_page, $field_orden, $tipo_orden, $pais) {
+  // Check for mad values
+  return bac_service_resource_find_personas_listado_dashboard_items($items_per_page, $field_orden, $tipo_orden, $pais);
+
+
+}
+
+
+/**
+ * Gets personas_listado_dashboard posts
+ */
+function bac_service_resource_find_personas_listado_dashboard_items($items_per_page = 10, $field_orden, $tipo_orden, $pais = "") {
+
+  //Subquery para obtener total de aplicantes por puesto
+  $query_inner = db_select('bitacora_aplicante', 'bitacora');
+  $query_inner->fields('bitacora', array('uid_aplicante'));
+  $query_inner->addExpression('MAX(bitacora.fecha)', 'max_fecha');
+  $query_inner->groupBy('bitacora.uid_aplicante');
+
+  // Consulta de peustos
+  $query = db_select('users', 'u');
+
+  $query->fields('u', array('uid', 'created'));
+  $query->fields('nombre_comp', array('field_nombre_y_apellidos_value'));
+  $query->fields('nacionalidad', array('name'));
+  $query->fields('estado', array('tid_estado', 'nid_puesto'));
+  $query->fields('puesto_entity', array('title'));
+
+
+  // Condicion de tipo de contenido
+  $query->condition('u.status', '1', '=');// que esté activo el usuario
+  $query->condition('roles.rid', '4', '='); //rol de aplicante
+
+  $query->leftjoin('users_roles', 'roles', '(u.uid = roles.uid)');  
+  $query->leftjoin('field_revision_field_nombre_y_apellidos', 'nombre_comp', '(u.uid = nombre_comp.entity_id) and (nombre_comp.entity_type = \'user\')');  
+  $query->leftjoin('field_revision_field_nacionalidad', 'nacionalidad_iso', '(u.uid = nacionalidad_iso.entity_id) and (nacionalidad_iso.entity_type = \'user\')');
+  $query->leftjoin('countries_country', 'nacionalidad', '(nacionalidad_iso.field_nacionalidad_iso2 = nacionalidad.iso2)');
+  
+  $query->leftjoin('field_revision_field_pais_trabajar', 'pais_trabajar' , '(u.uid = pais_trabajar.entity_id) and (pais_trabajar.entity_type = \'user\')');
+  $query->addJoin('LEFT OUTER', $query_inner, 'estado_fecha_maxima', 'estado_fecha_maxima.uid_aplicante = u.uid');
+  $query->leftjoin('bitacora_aplicante', 'estado' , '(u.uid = estado.uid_aplicante) and (estado.fecha = estado_fecha_maxima.max_fecha)');
+  $query->leftjoin('taxonomy_term_data', 'estado_taxonomy' , '(estado.tid_estado = estado_taxonomy.tid)');
+  $query->leftjoin('node', 'puesto_entity' , '(estado.nid_puesto = puesto_entity.nid)');
+
+  if($pais !== null and  $pais[0] > 0){
+      $query->condition('pais_trabajar.field_pais_trabajar_target_id', $pais, 'IN');
+  }
+
+  
+      //order-by según columnas
+
+  if($field_orden!== null){
+    if($field_orden == "nombre"){
+      $query->orderBy('nombre_comp.field_nombre_y_apellidos_value', $tipo_orden);
+    }else if($field_orden == "puesto"){
+      $query->orderBy('puesto_entity.title', $tipo_orden);
+    }else if($field_orden == "nacion"){
+      $query->orderBy('nacionalidad.name', $tipo_orden);
+    }else if($field_orden == "estado"){
+      $query->orderBy('estado_taxonomy.name', $tipo_orden);
+    }else if($field_orden == "fecha_reg"){
+      $query->orderBy('u.created', $tipo_orden);
+    }else{
+      $query->orderBy('u.created', 'DESC');
+    }
+  }else{
+    $query->orderBy('u.created', 'DESC');
+  }
+
+  $query->groupBy('u.uid');
+
+  //obtiene el total de la consulta sin limit
+  $result_total = $query->execute();
+  $result_total_fetch = $result_total->fetchAll();
+  $items_total = array();
+  foreach($result_total_fetch as $value) {    
+    array_push($items_total, $value->uid);
+  }
+  
+
+  
+
+  $offset = 0;
+  if ($items_per_page) {
+    
+    $query->range($offset, $items_per_page);
+  }
+  
+
+  //ejecuta la consulta de puestos.
+  $result_aplicantes = $query->execute();
+  $items_aplicantes = $result_aplicantes->fetchAll(); 
+
+
+  $total_aplicantes = $result_aplicantes->rowCount();
+
+
+
+
+  return array('total_aplicantes' => $total_aplicantes,
+              'items' => $items_aplicantes,
+              'items_total' => $items_total);
+}
+
+
+/**
+ * Callback function for paquete_terrestre retrieve
+ */
+function _bac_service_resource_dashboard_general_info_retrieve($pais) {
+  // Check for mad values
+  return bac_service_resource_find_dashboard_general_info_items($pais);
+
+
+}
+
+
+/**
+ * Gets paquete_terrestre posts
+ */
+function bac_service_resource_find_dashboard_general_info_items($pais = "") {
+
+
+  //Subquery para obtener total de aplicantes por puesto
+  $query_aplicantes = db_select('field_revision_field_puesto', 'puestos_aplicados');
+  $query_aplicantes->fields('puestos_aplicados', array('field_puesto_target_id'));
+  $query_aplicantes->addExpression('COUNT(puestos_aplicados.entity_id)', 'count_aplicantes');
+  $query_aplicantes->groupBy('puestos_aplicados.field_puesto_target_id');
+
+
+
+  // Consulta de peustos
+  $query_puestos = db_select('node', 'n');
+
+  $query_puestos->fields('n', array('nid'));
+  $query_puestos->fields('aplicantes', array('count_aplicantes'));
+  // Condicion de tipo de contenido
+  $query_puestos->condition('n.type', 'puesto_vacante', '=');
+
+
+ 
+
+
+
+  $query_puestos->leftjoin('field_revision_field_pais', 'pais', '(n.nid = pais.entity_id)');  
+  $query_puestos->addJoin('LEFT OUTER', $query_aplicantes, 'aplicantes', 'aplicantes.field_puesto_target_id = n.nid');
+  $query_puestos->orderBy('n.created', 'DESC');
+
+
+  $query_personas = db_select('users','u');
+  $query_personas->fields('u', array('uid'), 'id_usuario');
+
+  
+
+  $query_personas->leftjoin('users_roles', 'roles', '(u.uid = roles.uid)'); 
+  $query_personas->leftjoin('field_revision_field_pais_trabajar', 'pais_aplicante', '(u.uid = pais_aplicante.entity_id) and (pais_aplicante.entity_type=\'user\')'); 
+
+  $query_personas->condition('u.status', '1', '=');// que esté activo el usuario
+  $query_personas->condition('roles.rid', '4', '='); //rol de aplicante
+
+  if($pais !== null and $pais[0] > 0){
+      $query_puestos->condition('pais.field_pais_target_id', $pais, 'IN');
+      $query_personas->condition('pais_aplicante.field_pais_trabajar_target_id', $pais, 'IN');
+  }
+
+  $query_personas->groupBy('uid');
+
+  $total_aplicantes = 0;
+  $total_personas = 0;
+  $total_puestos = 0;
+
+  //ejecuta la consulta de puestos.
+  $result_puestos = $query_puestos->execute();
+  $items_puestos = $result_puestos->fetchAll(); 
+
+
+  $total_puestos = $result_puestos->rowCount();
+
+  //hace sumatoria de aplicantes
+  foreach ($items_puestos as $key => $value) {
+    if(!empty($value->count_aplicantes)){
+      $total_aplicantes += $value->count_aplicantes;
+    }
+  }
+
+
+
+  //ejecuta la consulta de personas.
+  $total_personas = $query_personas->execute()->rowCount();
+
+
+
+  return array('total_puestos' => $total_puestos,
+              'total_aplicantes' => $total_aplicantes,
+              'total_personas' => $total_personas,
+              'pais' => $pais);
+
+}
+
+/**
+ * Callback function for paquete_terrestre retrieve
+ */
+function _bac_service_resource_puestos_admin_retrieve($page, $items_per_page, $field_orden, $tipo_orden, $title_search, $pais, $carrera, $estado, $admin) {
+  // Check for mad values
+  return bac_service_resource_find_puestos_admin_items($page, $items_per_page, $field_orden, $tipo_orden, $title_search, $pais, $carrera, $estado, $admin);
+
+
+}
+
+
+/**
+ * Gets paquete_terrestre posts
+ */
+function bac_service_resource_find_puestos_admin_items($page, $items_per_page = 10, $field_orden, $tipo_orden, $title_search = "", $pais = "", $carrera = "", $estado = "", $admin = "") {
+
+
+ 
+
+  //Subquery para obtener total de aplicantes por puesto
+  $query_inner = db_select('field_revision_field_puesto', 'puestos_aplicados');
+  $query_inner->fields('puestos_aplicados', array('field_puesto_target_id'));
+  $query_inner->addExpression('COUNT(puestos_aplicados.entity_id)', 'count_aplicantes');
+  $query_inner->groupBy('puestos_aplicados.field_puesto_target_id');
+
+
+
+
+
+  // Consulta con Limit para manegar paginación
+  $query = db_select('node', 'n');
+
+  $query->fields('n', array('nid', 'status'), 'puesto_id');
+  $query->fields('n', array('title'), 'puesto_titulo');
+  $query->fields('body', array('body_value'), 'puesto_cuerpo');
+  $query->fields('pais', array('field_pais_target_id'),'pais_id');
+  $query->fields('pais_entidad', array('title'), 'pais_name');
+  $query->fields('carrera', array('field_carrera_target_id'),'carrera_id');
+  $query->fields('fecha_cierre', array('field_fecha_de_cierre_de_oferta_value'),'fecha_cierre');  
+  $query->fields('u', array('uid'), 'user_id');
+  $query->fields('nombre_apellidos_admin', array('field_nombre_y_apellidos_value'),'admin_name');
+  $query->fields('aplicantes', array('count_aplicantes'));
+
+
+  
+  // Condicion de tipo de contenido
+  $query->condition('n.type', 'puesto_vacante', '=');
+
+
+  //Condiciones para filtros
+  if($title_search!= "") {
+    $query->condition('n.title', '%' . db_like($title_search) . '%', 'LIKE');
+  }
+
+  if($pais !== null){
+      $query->condition('pais.field_pais_target_id', $pais, 'IN');
+    
+  }
+
+  if($carrera !== null){
+      $query->condition('carrera.field_carrera_target_id', $carrera, 'IN');
+    
+  }
+  if($estado !== null){
+      $query->condition('n.status', $estado, 'IN');
+    
+  }
+  if($admin != ""){
+    $query->condition('nombre_apellidos_admin.field_nombre_y_apellidos_value', '%' . db_like($admin) . '%', 'LIKE');
+  }
+
+
+  $query->join('node_revision', 'v', '(n.nid = v.nid) AND (n.vid = v.vid)');
+  $query->leftJoin('field_revision_body', 'body', '(n.nid = body.entity_id)');
+  $query->leftjoin('field_revision_field_pais', 'pais', '(n.nid = pais.entity_id)');
+  $query->leftjoin('node', 'pais_entidad', 'pais.field_pais_target_id = pais_entidad.nid');
+  $query->leftjoin('field_revision_field_carrera', 'carrera', '(n.nid = carrera.entity_id)');
+  $query->join('field_revision_field_fecha_de_cierre_de_oferta', 'fecha_cierre', '(n.nid = fecha_cierre.entity_id)');
+  $query->join('users', 'u', 'n.uid = u.uid');
+  $query->leftJoin('field_revision_field_nombre_y_apellidos', 'nombre_apellidos_admin', '(nombre_apellidos_admin.entity_id = u.uid)');
+  $query->addJoin('LEFT OUTER', $query_inner, 'aplicantes', 'aplicantes.field_puesto_target_id = n.nid');
+
+
+  //order-by según columnas
+
+  if($field_orden!== null){
+    if($field_orden == "nombre"){
+      $query->orderBy('n.title', $tipo_orden);
+    }else if($field_orden == "pais"){
+      $query->orderBy('pais_entidad.title', $tipo_orden);
+    }else if($field_orden == "fecha-cierre"){
+      $query->orderBy('fecha_cierre.field_fecha_de_cierre_de_oferta_value', $tipo_orden);
+    }else if($field_orden == "admin"){
+      $query->orderBy('nombre_apellidos_admin.field_nombre_y_apellidos_value', $tipo_orden);
+    }else if($field_orden == "cant_aplicantes"){
+      $query->orderBy('aplicantes.count_aplicantes', $tipo_orden);
+    }else if($field_orden == "estado_puesto"){
+      $query->orderBy('n.status', $tipo_orden);
+    }else{
+      $query->orderBy('v.timestamp', 'DESC');
+      $query->orderBy('n.status', 'DESC');
+    }
+  }else{
+    $query->orderBy('v.timestamp', 'DESC');
+    $query->orderBy('n.status', 'DESC');
+  }
+
+  //obtiene el total de la consulta sin limit
+  $result_total = $query->execute();   
+  $row_count_total = $result_total->rowcount();
+
+
+
+
+  // Limited by items?
+  $offset = 0;
+  if ($items_per_page) {
+    if($page>0){
+      $offset = $page*$items_per_page;
+    }
+    $query->range($offset, $items_per_page);
+  }
+  
+
+
+  //ejecuta la consulta
+  $result = $query->execute(); 
+
+  //formatea los resultados
+  $items = $result->fetchAll();
+
+  //obtiene el total de resultados consultados
+  $rowcount = $result->rowCount();
+
+  
+  //calcula el total de paginas que tiene la consulta
+  $total_pages = floor($row_count_total/$items_per_page);
+
+  if (($row_count_total%$items_per_page)>0){
+    $total_pages++;
+  }
+  //hay que restarle uno ya que las paginas comienzan a contarse desde 0 en codeigniter
+  $total_pages = $total_pages-1;
+
+  //muestra los display start y end
+
+  if ($rowcount>0){
+    $display_start = $offset+1;
+  }else{
+    $display_start = $offset;
+  }
+  
+  $display_end = $offset + $rowcount;
+
+  return array('field_orden' => $field_orden,
+              'tipo_orden' => $tipo_orden,
+              'items' => $items,
+              'rowcount' => $rowcount,
+              'display_start' => $display_start,
+              'display_end' => $display_end,
+              'items_per_page' => $items_per_page,
+              'total_results' => $row_count_total,
+              'page' => $page,
+              'total_pages' => $total_pages
+              );
+}
+
+
+/**
+ * Callback function for paquete_terrestre retrieve
+ */
+function _bac_service_resource_puestos_admin_dashboard_retrieve($items_per_page, $field_orden, $tipo_orden,  $pais) {
+  // Check for mad values
+  return bac_service_resource_find_puestos_admin_dashboard_items( $items_per_page, $field_orden, $tipo_orden, $pais);
+
+
+}
+
+
+/**
+ * Gets paquete_terrestre posts
+ */
+function bac_service_resource_find_puestos_admin_dashboard_items($items_per_page = 5, $field_orden="", $tipo_orden="", $pais = "") {
+
+
+  //Subquery para obtener total de aplicantes por puesto
+  $query_inner = db_select('field_revision_field_puesto', 'puestos_aplicados');
+  $query_inner->fields('puestos_aplicados', array('field_puesto_target_id'));
+  $query_inner->addExpression('COUNT(puestos_aplicados.entity_id)', 'count_aplicantes');
+  $query_inner->groupBy('puestos_aplicados.field_puesto_target_id');
+
+
+
+  // Consulta con Limit para manegar paginación
+  $query = db_select('node', 'n');
+
+  $query->fields('n', array('nid', 'title', 'created', 'status'));
+  $query->fields('carrera', array('field_carrera_target_id'),'carrera_id');  
+  $query->fields('carrera_entidad', array('title'), 'carrera_name');
+  $query->fields('pais', array('field_pais_target_id'),'pais_id');
+  $query->fields('pais_entidad', array('title'), 'pais_name');
+  $query->fields('zona', array('field_zona_value'), 'zona_name');   
+  $query->fields('aplicantes', array('count_aplicantes'));
+
+
+  // Condicion de tipo de contenido
+  $query->condition('n.type', 'puesto_vacante', '=');
+
+
+  if($pais !== null and $pais[0] > 0){
+      $query->condition('pais.field_pais_target_id', $pais, 'IN');
+  }
+
+
+  $query->join('node_revision', 'v', '(n.nid = v.nid) AND (n.vid = v.vid)');
+  $query->leftjoin('field_revision_field_pais', 'pais', '(n.nid = pais.entity_id)');
+  $query->leftjoin('node', 'pais_entidad', 'pais.field_pais_target_id = pais_entidad.nid');
+  $query->leftjoin('field_revision_field_carrera', 'carrera', '(n.nid = carrera.entity_id)');
+  $query->leftjoin('node', 'carrera_entidad', 'carrera.field_carrera_target_id = carrera_entidad.nid');
+  $query->leftjoin('field_revision_field_zona', 'zona', '(n.nid = zona.entity_id)');
+  $query->addJoin('LEFT OUTER', $query_inner, 'aplicantes', 'aplicantes.field_puesto_target_id = n.nid');
+
+
+  
+      //order-by según columnas
+
+  if($field_orden!== null){
+    if($field_orden == "desc_puesto"){
+      $query->orderBy('n.title', $tipo_orden);
+    }else if($field_orden == "pais"){
+      $query->orderBy('pais_entidad.title', $tipo_orden);
+    }else if($field_orden == "fecha_pub"){
+      $query->orderBy('n.created', $tipo_orden);
+    }else if($field_orden == "aplicantes"){
+      $query->orderBy('aplicantes.count_aplicantes', $tipo_orden);
+    }else if($field_orden == "estado_puesto"){
+      $query->orderBy('n.status', $tipo_orden);
+    }else{
+      $query->orderBy('u.created', 'DESC');
+    }
+  }else{
+    $query->orderBy('u.created', 'DESC');
+  }
+
+
+  // Limited by items?
+  $offset = 0;
+  if ($items_per_page) {    
+    $query->range($offset, $items_per_page);
+  }else{
+    $query->range($offset, 5);
+  }  
+
+  //ejecuta la consulta
+  $items = $query->execute()->fetchAll(); 
+
+
+  return array('items' => $items);
+}
+
+
+
+
+/* Callback function for webform submissions creation */
+
+function _bac_service_resource_webform_submission_create($webform_id, $nombre, $correo, $pais, $telefono, $comentario){
+  return bac_service_resources_webform_submissions_create($webform_id, $nombre, $correo, $pais, $telefono, $comentario);
+}
+
+
+/* Crear el webform submission */
+
+function bac_service_resources_webform_submissions_create($webform_id, $nombre, $correo, $pais = "", $telefono = "", $comentario = "") {
+  $node = node_load($webform_id);
+  global $user;
+
+  if (($pais=="") and ($telefono=="") and ($comentario=="")){
+      $data = array(
+      'nombre' => $nombre,
+      'correo' => $correo,
+    );
+  }else{
+    $data = array(
+      'nombre' => $nombre,
+      'correo' => $correo,
+      'pais' => $pais,
+      'telefono' => $telefono,
+      'comentario' => $comentario,
+    );
+  }
+
+  
+
+
+
+  module_load_include('inc', 'webform', 'webform.module');
+  module_load_include('inc', 'webform', 'includes/webform.submissions');
+
+ 
+
+  // This methods will arrange $data in the right way
+  $data = _webform_client_form_submit_flatten($node, $data);
+  $data = webform_submission_data($node, $data);
+
+  
+
+
+  $submission = (object) array(
+    'nid' => $webform_id,
+    'uid' => $user->uid,
+    'sid' => NULL,
+    'submitted' => REQUEST_TIME,
+    'completed' => REQUEST_TIME,
+    'remote_addr' => ip_address(),
+    'is_draft' => FALSE,
+    'data' => $data
+  );
+
+  $sid = webform_submission_insert($node, $submission);
+  webform_submission_send_mail($node, $submission);
+
+
+  if(isset($sid)){
+    return $sid;
+  }else{
+    return 0;
+  }
+}
+
+/*
+ * Implements hook_cron()
+**/
+function bac_service_resource_cron(){//'2016-03-31 00:00:00
+  //obtenemos la fecha de hoy
+  $todayDay = date('Y-m-d 00:00:00');
+  
+  $query = db_select('node', 'n');
+  $query->fields('n', array('nid', 'status'));
+  $query->fields('fdffco', array('field_fecha_de_cierre_de_oferta_value'));
+  $query->join('field_data_field_fecha_de_cierre_de_oferta', 'fdffco', 'fdffco.entity_id = n.nid');
+  $result = $query->execute();
+  while($record = $result->fetchAssoc()) {
+    //var_export(date('Y-m-d 00:00:00', strtotime($record['field_fecha_de_cierre_de_oferta_value'])));
+    //var_export(date('Y-m-d 00:00:00', strtotime($record['field_fecha_de_cierre_de_oferta_value'])));
+    if($record['status'] != 0){
+      // load the node object
+      if(date('Y-m-d 00:00:00', strtotime($record['field_fecha_de_cierre_de_oferta_value'])) <= $todayDay){
+        $node = node_load($record['nid']);
+        //update node table
+        $update = db_update('node')
+        ->fields(array(
+            'status' => 0
+          ))
+        ->condition('nid', $record['nid'], '=')
+        ->execute();
+
+        //delete cache
+        deletecache($node->type); 
+
+      }
+    }
+  }
+}
+
+?>

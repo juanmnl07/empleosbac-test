@@ -1,0 +1,70 @@
+/*
+  =BASE
+--------------------------------------------- */
+html {
+  border-top: 6px solid #000;
+}
+body {
+  padding: 0;
+}
+/*
+  =LAYOUT
+--------------------------------------------- */
+.header {
+  background: #3C3B3B;
+}
+.header .grid,
+.main-content,
+.footer {
+  max-width: 70em;
+  margin: 0 auto;
+  overflow: hidden;
+}
+
+.one-sidebar .main {
+  width: 60%;
+  padding: 0 0.875em;
+}
+.one-sidebar #sidebar-first {
+  width: 40%;
+  padding: 0 0.875em;
+}
+.sidebar-first .main {
+  float: left;
+}
+.sidebar-first #sidebar-first {
+  float: right;
+}
+
+/*
+  =MEDIA QUERIES
+--------------------------------------------- */
+@media only screen and (min-width: 30em) { /* > 480 */
+
+}
+
+@media only screen and (min-width: 30em) and (max-width: 35em) {
+
+}
+
+@media only screen and (min-width: 35em) { /* > 560 */
+
+}
+
+@media only screen and (min-width: 40em) { /* > 640 */
+
+}
+
+@media only screen and (min-width: 45em) { /* > 720 */
+
+
+}
+
+@media only screen and (min-width: 55em) { /* > 880 */
+
+}
+
+@media only screen and (min-width: 60em) { /* > 960 */
+
+
+}

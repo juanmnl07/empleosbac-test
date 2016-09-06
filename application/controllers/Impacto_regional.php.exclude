@@ -1,0 +1,62 @@
+<?php
+
+defined('BASEPATH') OR exit('No direct script access allowed');
+
+class Impacto_regional extends CI_Controller {
+
+    public function __construct()
+    {
+	    parent::__construct();
+		//$this->output->cache(3600);
+    }
+ 	public function index()
+	{
+		$data['titulo'] = 'Impacto Regional';
+		$data['vista']  = 'impacto_regional';
+
+		$this->breadcrumb->clear();
+		$this->breadcrumb->add('Inicio', '/');
+		$this->breadcrumb->add('Impacto Regional');
+
+		$this->load->view('index', $data);
+	}
+
+	public function detalle()
+	{	
+		$id = $this->uri->segment(3);
+
+		
+		$info = $this->cache->get('pais-detalle_pais-id-'.$id);
+		if(!$info){
+			$info = $this->general->getJSON('/rrhh/api/paises/pais-detalle?pais-id='.$id.'');
+			$this->cache->write($info, 'pais-detalle_pais-id-'.$id);
+		}
+
+
+		$info = $info['results'][0];
+		extract($info);
+
+		$ftitle = $this->general->formatURL($title);
+
+		if($this->uri->segment(2) !== $ftitle){ 
+			$this->general->nofount();
+		}
+
+		$data['titulo'] = "Impacto Regional - ".$title;					
+		$data['vista'] = 'impacto_regional_detalle';
+		
+
+		$this->breadcrumb->clear();
+		$this->breadcrumb->add('Inicio', '/');
+		$this->breadcrumb->add('Impacto Regional', '/impacto-regional/');
+		$this->breadcrumb->add($title);
+
+		$data['info'] = $info;
+
+		$this->load->view('index', $data);
+	}
+
+
+	
+
+}
