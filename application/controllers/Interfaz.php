@@ -657,10 +657,13 @@ class Interfaz extends CI_Controller {
 				$data['mensaje'] = $auth_data['mensaje'];
 				$data['code'] = 406;
 			}
-
-			$data['response'] = $data;
-			$this->load->view('user/user-response', $data);	
-		}		
+		}else{
+			$data['success'] = false;
+			$data['mensaje'] = 'vacio';
+			$data['code'] = 406;
+		}
+		$data['response'] = $data;
+		$this->load->view('user/user-response', $data);		
  	}
 
  	public function actualizarPuesto($nid_puesto){

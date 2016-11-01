@@ -59,7 +59,6 @@ $route['historias/categoria/(:any)/(:num)'] = 'historias/categoria';
 $route['historias/tag/(:any)/(:num)'] = 'historias/tag';
 $route['historias/(:any)/(:num)'] = 'historias/detalle';
 
-
 $route['default_controller'] = 'inicio';
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = TRUE;
@@ -98,7 +97,6 @@ $route['admin/usuario/cambia-pais/(:any)'] = 'usuario/cambiaPaisSession/$1';
 /* Presencia regional */
 $route['presencia-regional/(:any)/(:num)'] = 'presencia_regional/detalle';
 
-	
 /* Pruebas */
 $route['interfaz/estado/aplicante/actualizar/(:any)/(:any)/(:any)'] = 'interfaz/actualizarEstadoAplicante/$1/$2/$3';
 $route['interfaz/estado/aplicante/liberar/(:any)/(:any)'] = 'interfaz/liberarEstadoAplicante/$1/$2';

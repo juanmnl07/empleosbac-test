@@ -420,8 +420,10 @@ function estado_aplicante_obtener_aplicantes_costa_rica($uid_aplicante){
   $query->leftjoin('field_data_field_estado_civil', 'fdfec', '(fdfec.entity_id = u.uid)');
   $query->leftjoin('field_data_field_discapacidad', 'fdfd', '(fdfd.entity_id = u.uid)');
   $query->leftjoin('field_data_field_trabajo_anteriormente_bac', 'fdftab', '(fdftab.entity_id = u.uid)');
+  $query->leftjoin('field_data_field_curriculum', 'fdfcur', '(fdfcur.entity_id = u.uid)');
   //$query->leftjoin('field_data_field_envio_de_informacion', 'fdfei', '(fdfei.entity_id = u.uid)');
   $query->leftjoin('file_managed', 'fm', '(fm.fid = fdfip.field_imagen_perfil_fid)');
+  $query->leftjoin('file_managed', 'fm2', '(fm2.fid = fdfcur.field_curriculum_fid)');
   //$query->join('taxonomy_term_data', 'ttdnaca', '(ttd.tid = fdfnaca.field_nivel_academico_tid)');
   $query->fields('fdfna', array('field_nombre_y_apellidos_value'));
   $query->fields('u', array('mail', 'uid'));
@@ -439,6 +441,7 @@ function estado_aplicante_obtener_aplicantes_costa_rica($uid_aplicante){
   $query->fields('fdftab', array('field_trabajo_anteriormente_bac_tid'));
   //$query->fields('fdfei', array('field_envio_de_informacion_tid'));
   $query->fields('fm', array('uri'));
+  $query->addField('fm2', 'uri', 'Curriculum');
   //$query->fields('fdfpt', array('field_pais_trabajar_target_id')); 
   //$query->condition('fdfn.field_nacionalidad_iso2', 'CR', '=');
   if($uid_aplicante!=0){
@@ -498,6 +501,11 @@ function estado_aplicante_obtener_aplicantes_costa_rica($uid_aplicante){
         $id_puesto = $value->nid;
         array_push($aplicaciones, array('nid' => $value->nid, 'title' => $value->title, 'fecha' => $value->fecha, 'tid_estado' => $value->tid_estado, 'pais_title' => $value->pais_title));
       }
+    }
+
+    foreach ($items as $key => $value) {
+      $curriculum = str_replace('public://', "/sites/default/files/uploads/", $value->Curriculum);
+      $value->Curriculum = $curriculum;
     }
 
     array_push($aplicantes, array('info' => $items, 'enlaces' => $items3, 'carreras para aplicar' => $items2, 'notificaciones' => $items5, 'aplicaciones' => $aplicaciones));

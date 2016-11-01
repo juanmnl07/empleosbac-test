@@ -218,8 +218,8 @@ $databases = array (
     'default' => 
     array (
       'database' => 'bac_test',
-      'username' => 'bac_user',
-      'password' => 'e#fLlBgQ^=kQ',
+      'username' => 'root',
+      'password' => '',
       'host' => 'localhost', #mariadb-151.wc1.ord1.stabletransit.com
       'port' => '',
       'driver' => 'mysql',

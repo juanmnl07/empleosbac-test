@@ -76,8 +76,8 @@ $query_builder = TRUE;
 $db['default'] = array(
 	'dsn'	=> '',
 	'hostname' => 'localhost',
-	'username' => 'bac_user',
-	'password' => 'e#fLlBgQ^=kQ',
+	'username' => 'root',
+	'password' => '',
 	'database' => 'bac_test',
 	'dbdriver' => 'mysqli',
 	'dbprefix' => '',
