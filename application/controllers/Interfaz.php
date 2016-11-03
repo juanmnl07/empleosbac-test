@@ -710,7 +710,6 @@ class Interfaz extends CI_Controller {
 				}
 
 				//exit(var_dump($post_data));
-
 				if($validacionFecha){
 					//actualizar imagen va al final
 					//if(isset($post_data['imagen_puesto'])){

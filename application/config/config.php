@@ -17,7 +17,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | environments.
 |
 */
-$config['base_url'] = 'http://bac.orbelink.com'; /* http://bac.cr : http://192.168.5.109   http://test.empleosbaccredomatic.com */
+$config['base_url'] = 'http://dev.bac-test.com/'; /* http://bac.cr : http://192.168.5.109   http://test.empleosbaccredomatic.com */
 
 /*
 |--------------------------------------------------------------------------

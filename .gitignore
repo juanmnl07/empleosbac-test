@@ -1,0 +1,6 @@
+rrhh/sites/default/settings.php
+application/cache/*
+application/tmp/*
+application/logs/*
+application/config/config.php
+files/pdfs/
