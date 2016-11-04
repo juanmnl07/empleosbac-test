@@ -29,9 +29,9 @@
 				          <th><a class="table-order-filter" data-order-field="edad" href="javascript:void(0);">Edad</a></th>			          
 				          <th><a class="table-order-filter" data-order-field="cuando_ap" href="javascript:void(0);">Cuando aplicó</a></th>
 				          <th><a class="table-order-filter" data-order-field="estado" href="javascript:void(0);">Estado</a></th>
-				          <?php if($admin_id == $autor){ ?>
+				          <!--<?php if($admin_id == $autor){ ?>
 				          	<th>Descartar <br/> Postulante</th>
-				          <?php } ?>
+				          <?php } ?>-->
 			          <?php }  ?>
 			      </tr>
 			    </thead>

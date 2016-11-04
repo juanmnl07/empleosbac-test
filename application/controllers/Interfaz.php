@@ -15,6 +15,10 @@ class Interfaz extends CI_Controller {
     }
 
     public function actualizarEstadoAplicante($uid_aplicante, $nid_puesto, $tid_estado){
+
+	//url para actualizar en estado de la ultima aplicacion del usuario     		
+ 	$request_url = base_url().'rrhh/api/users/user/'. $uid_aplicante;	
+
     	//validar los argumentos url
     	if(!is_numeric($nid_puesto) || !is_numeric($uid_aplicante) || !is_numeric($tid_estado)){
     		$data['success'] = false;
@@ -22,7 +26,8 @@ class Interfaz extends CI_Controller {
 			$data['code'] = '406';
     	}else{
 	 		$auth_data = $this->autenticacion();
-
+		 	
+		 	//validar sesion del usuario
 		 	if($auth_data['valido']){
 				$csrf_token = $auth_data['csrf_token'];
 				$session_cookie = $auth_data['session_cookie'];
@@ -33,26 +38,25 @@ class Interfaz extends CI_Controller {
 
 					//validar el usuario si existe
 					$user = $this->Users->load($uid_aplicante);
-					//exit(var_dump((int)count($user)));
-
 					if((int)count($user) > 0){
 
-						//validar autoria
 						$puesto = $this->Node->load($nid_puesto);
 						$usuario_admin = $this->Users->load($puesto[0]->uid);
+						
+						//validar autoria
 						//validar usuario administrador
 						if($_POST['mail'] == $usuario_admin[0]->mail){
-							//validar que el aplicante a modificar el estado sea nacional
+							//Obtener el aplicante
 							$aplicante_url = base_url('/rrhh/api/users/detalle-aplicante-blip.xml?user_id='.$uid_aplicante);
 							$obtener_aplicante = consumirServicio($aplicante_url, $session_cookie, $csrf_token);
 
-							//validar si el aplicante desea laborar en Costa Rica
 							$validar_aplicante = false;
 							foreach ($obtener_aplicante->results as $key => $value) {
 								foreach ($value as $key2 => $value2) {
 									$pais_trabajar = $value2->field_pais_trabajar;
 									foreach ($pais_trabajar as $key3 => $value3) {
 										foreach ($value3->item as $key4 => $value4) {
+											//validar si el aplicante desea laborar en Costa Rica
 											if($value4->target_id == '10'){
 												$validar_aplicante = true;		
 											}
@@ -61,6 +65,7 @@ class Interfaz extends CI_Controller {
 								}
 							}
 
+							//validar el aplicante
 							if($validar_aplicante){	
 								//validar si el estado ingresado es el que corresponde
 								$estados_url = base_url('/rrhh/api/filtros/filtros-taxonomias-estados-bitacora.xml');
@@ -77,7 +82,7 @@ class Interfaz extends CI_Controller {
 								if($estado_valido){
 									//verificar si el puesto a modificar es el correcto al usuario
 									//extrar todas las aplicaciones del usuario
-									// Obtener todos los puestos aplicados por el aplicante
+									//Obtener todos los puestos aplicados por el aplicante
 									$puestos_aplicados_url = base_url('/rrhh/api/users/listado-puestos-aplicados-por-aplicante.xml?uid_aplicante='.$uid_aplicante);
 									$puestos_aplicados_por_aplicante = consumirServicio($puestos_aplicados_url, $session_cookie, $csrf_token);
 
@@ -90,16 +95,11 @@ class Interfaz extends CI_Controller {
 										}
 									}
 
-									//validar si el puesto esta asignado al usuario, de lo contrario se realizara una auto asignacion	
-								 	$request_url = base_url().'rrhh/api/users/user/'. $uid_aplicante;	
-
-									// Obtener todos los puestos aplicados por el aplicante
-									$puestos_aplicados_url = base_url('/rrhh/api/puestos/puestos_aplicados_por_aplicante.xml?uid='.$uid_aplicante);
-									$puestos_aplicados = consumirServicio($puestos_aplicados_url, $session_cookie, $csrf_token);
-
-									//exit(var_dump($puestos_aplicados_por_aplicante));
-
-									if($aplicacion_encontrada){	
+									//validar si el puesto esta asignado al usuario, de lo contrario se realizara una auto asignacion
+									if($aplicacion_encontrada){
+										// Obtener todos los puestos aplicados por el aplicante
+										$puestos_aplicados_url = base_url('/rrhh/api/puestos/puestos_aplicados_por_aplicante.xml?uid='.$uid_aplicante);
+										$puestos_aplicados = consumirServicio($puestos_aplicados_url, $session_cookie, $csrf_token);
 
 										//validar preselecciones
 										$listado_puestos = array();
@@ -115,7 +115,7 @@ class Interfaz extends CI_Controller {
 												$count_preselecciones++;
 										}
 
-										if((($count_preselecciones < 1) && ($tid_estado == 29)) || (($count_preselecciones == 1) && ($tid_estado != 29))) {
+										if(($count_preselecciones < 1) || (($count_preselecciones == 1) && ($tid_estado != 29))) {
 
 											$user_data = array("field_estado" => array(
 																		"und" => array(
@@ -710,6 +710,7 @@ class Interfaz extends CI_Controller {
 				}
 
 				//exit(var_dump($post_data));
+
 				if($validacionFecha){
 					//actualizar imagen va al final
 					//if(isset($post_data['imagen_puesto'])){

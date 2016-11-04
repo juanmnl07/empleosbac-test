@@ -515,30 +515,14 @@ function bac_service_resource_puestos_aplicados_por_aplicante_items($uid = 0) {
   $query->join('field_revision_body', 'descripcion', '(nodo_puesto.nid = descripcion.entity_id) and (descripcion.entity_type = \'node\')');
   $query->addJoin('LEFT OUTER', $query_fecha_max, 'estado_fecha_maxima', '('.$uid.' = estado_fecha_maxima.uid_aplicante) and (puestos_aplicados.field_puesto_target_id = estado_fecha_maxima.nid_puesto)');
   $query->leftjoin('bitacora_aplicante', 'estado' , '(estado_fecha_maxima.uid_aplicante = estado.uid_aplicante) and (puestos_aplicados.field_puesto_target_id = estado.nid_puesto) and (estado_fecha_maxima.max_fecha = estado.fecha)');
-  
-  
-
   // Condicion de tipo de contenido
   $query->condition('puestos_aplicados.entity_id', $uid, '=');// que esté activo el usuario
   $query->condition('nodo_puesto.status', 1,'=');
-
   $query->groupBy('puestos_aplicados.field_puesto_target_id');
-
-
-  
-
-
   //ejecuta la consulta
   $result = $query->execute(); 
-
   //formatea los resultados
   $items = $result->fetchAll();
-
-
-
-
- 
-
   return array('items' => $items,
               
               );

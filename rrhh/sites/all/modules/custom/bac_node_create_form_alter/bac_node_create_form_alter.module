@@ -446,7 +446,7 @@
 			'blog'										
 		);
 		if(in_array($tipo, $tipos)){
-                    $url = 'http://bac.orbelink.com/webcache/deletecache/'.$tipo;
+                    $url = 'http://dev.bac-test.com/webcache/deletecache/'.$tipo;
 		    $curl = curl_init($url);    
 		    $response = curl_exec($curl);
 		    curl_close($curl);
