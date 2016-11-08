@@ -14,15 +14,16 @@
             $value_aplicante_anterior = 0;
             $value_aplicante_siguiente = 0;
 
-            $current_aplicante_key = array_search($aplicante_id, $lista_ids_aplicantes);
-            if($current_aplicante_key!==null){
-                if($current_aplicante_key > 0){
-                    $value_aplicante_anterior = $lista_ids_aplicantes[$current_aplicante_key-1];
+            if(isset($aplicante_id)){
+                $current_aplicante_key = array_search($aplicante_id, $lista_ids_aplicantes);
+                if($current_aplicante_key!==null){
+                    if($current_aplicante_key > 0){
+                        $value_aplicante_anterior = $lista_ids_aplicantes[$current_aplicante_key-1];
+                    }
+                    if($current_aplicante_key < (count($lista_ids_aplicantes)-1)){
+                        $value_aplicante_siguiente = $lista_ids_aplicantes[$current_aplicante_key+1];
+                    }
                 }
-                if($current_aplicante_key < (count($lista_ids_aplicantes)-1)){
-                    $value_aplicante_siguiente = $lista_ids_aplicantes[$current_aplicante_key+1];
-                }                
-                
             }
             //var_export($lista_ids_aplicantes);
         ?>
