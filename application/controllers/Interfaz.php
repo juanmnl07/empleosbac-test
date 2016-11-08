@@ -95,12 +95,12 @@ class Interfaz extends CI_Controller {
 										}
 									}
 
+									// Obtener todos los puestos aplicados por el aplicante
+									$puestos_aplicados_url = base_url('/rrhh/api/puestos/puestos_aplicados_por_aplicante.xml?uid='.$uid_aplicante);
+									$puestos_aplicados = consumirServicio($puestos_aplicados_url, $session_cookie, $csrf_token);
+
 									//validar si el puesto esta asignado al usuario, de lo contrario se realizara una auto asignacion
 									if($aplicacion_encontrada){
-										// Obtener todos los puestos aplicados por el aplicante
-										$puestos_aplicados_url = base_url('/rrhh/api/puestos/puestos_aplicados_por_aplicante.xml?uid='.$uid_aplicante);
-										$puestos_aplicados = consumirServicio($puestos_aplicados_url, $session_cookie, $csrf_token);
-
 										//validar preselecciones
 										$listado_puestos = array();
 										foreach ($puestos_aplicados->items as $value) {
@@ -133,7 +133,7 @@ class Interfaz extends CI_Controller {
 											$result = ServicioActualizar($request_url, $user_data, $session_cookie, $csrf_token);
 											if($result){
 												$data['success'] = true;
-												$data['code'] = $result['httpcode'];				
+												$data['code'] = $result['httpcode'];		
 												if($data['code'] != 200){
 													$data['success'] = false;
 													$data['mensaje'] = $result['mensaje'];
@@ -206,7 +206,8 @@ class Interfaz extends CI_Controller {
 
 												if($result){
 													$data['success'] = true;
-													$data['code'] = $result['httpcode'];				
+													$data['code'] = $result['httpcode'];					
+													$data['mensaje'] = 'Se ha aplicado satisfactoramiente al puesto con el id: ' . $nid_puesto;					
 													if($data['code'] != 200){
 														$data['success'] = false;
 														$data['mensaje'] = $result['mensaje'];
@@ -336,21 +337,44 @@ class Interfaz extends CI_Controller {
 				$csrf_token = $auth_data['csrf_token'];
 				$session_cookie = $auth_data['session_cookie'];
 
-		 		$request_url = base_url().'rrhh/api/users/liberar_estado/retrieve.xml?idAplicante='. $uid_aplicante . '&idEstado='. $tid_estado;
-				$result = consumirServicio($request_url, $session_cookie, $csrf_token);
-
-				//exit(var_dump($result));
-				
-				if($return){
-					$httpcode = $result['httpcode'];
-					$mensaje = $result['mensaje'];
-					if($httpcode == 200){
-							$data['success'] = true;
-					} else {
-						$data['success'] = false;
-						$data['error'] = $mensaje;
-						$data['code'] = $httpcode;
+				//validar si el estado ingresado es el que corresponde
+				$estados_url = base_url('/rrhh/api/filtros/filtros-taxonomias-estados-bitacora.xml');
+				$estados = consumirServicio($estados_url, $session_cookie, $csrf_token);
+				$estado_valido = false;
+				foreach ($estados->results as $key => $value) {
+					foreach ($value as $key2 => $value2) {
+						if($tid_estado == (int)$value2->tid){
+							$estado_valido = true;
+						}
 					}
+				}
+
+				if($estado_valido){
+
+					//validar el usuario si existe
+					$user = $this->Users->load($uid_aplicante);
+					if((int)count($user) > 0){					
+
+				 		$request_url = base_url().'rrhh/api/users/liberar_estado/retrieve.xml?idAplicante='. $uid_aplicante . '&idEstado='. $tid_estado;
+						$result = consumirServicio($request_url, $session_cookie, $csrf_token);
+
+						if($return){
+							$data['success'] = true;
+							$data['error'] = 'Estado general actualizado satisfactoramiente';
+							$data['code'] = '200';
+									
+						}
+					}else{
+						//no se pudo validar que el aplicante sea nacional
+						$data['success'] = false;
+						$data['error'] = 'No existe el aplicante con el codigo: '.$uid_aplicante.', por favor verifique';
+						$data['code'] = '406';
+					}
+				} else {
+					//no se encontro ninguna aplicacion con el id ingresado desde el url
+					$data['success'] = false;
+					$data['error'] = 'Has ingresado un codigo de estado incorrecto, favor verifique';
+					$data['code'] = '406';
 				}
 			}
 		}
@@ -438,12 +462,15 @@ class Interfaz extends CI_Controller {
 						$this->email->message($body);
 
 						//También podríamos agregar simples verificaciones para saber si se envió:
-						$this->email->send();
+						$status_email = $this->email->send();
 
 						if($result){
 							$data['success'] = true;
 							$data['code'] = $result['httpcode'];				
-							if($data['code'] != 200){
+							if($status_email != false){
+								$data['success'] = false;
+								$data['mensaje'] = 'No fue posible enviar el correo, revise la configuracion SMTP';
+							}else if($data['code'] != 200){
 								$data['success'] = false;
 								$data['mensaje'] = $result['mensaje'];
 							}

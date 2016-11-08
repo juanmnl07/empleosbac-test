@@ -651,13 +651,13 @@ function estado_aplicante_obtener_total_aplicaciones($uid_aplicante) {
        //verificar cuantos elementos se van a actualizar
       foreach ($edit['field_ultimo_puesto_aplicado']['und'] as $key => $value) {
 
-        $result = db_select('bitacora_aplicante', 'b')
+        /*$result = db_select('bitacora_aplicante', 'b')
           ->fields('b')
           ->condition('uid_aplicante', $uid_aplicante,'=')
           ->condition('nid_puesto', $value['target_id'],'=')
           ->countQuery()
           ->execute()
-          ->fetchField();
+          ->fetchField();*/
 
         $uid_admin = $user->uid;
          //extraer las otras aplicaciones
@@ -675,7 +675,7 @@ function estado_aplicante_obtener_total_aplicaciones($uid_aplicante) {
             $aplicaciones [] = $value2->nid_puesto;
           }
         }
-        if($result >= 1){
+        //if($result >= 1){
           //si el usuario es aplicante, el user administrador que esta ligado es admin
             //si al actualizar el estado, este es de tipo lista negra, se actualizara todos los estados a lista negra
           if ($tid_estado == 28){
@@ -729,7 +729,7 @@ function estado_aplicante_obtener_total_aplicaciones($uid_aplicante) {
               actualizarBitacora($uid_aplicante, $value['target_id'], $uid_admin, $tid_estado, $fecha, $liberar_estado);
             }
           }
-        }
+        //}
       }
     }
   }else if(in_array('aplicante', $user->roles)){
