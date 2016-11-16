@@ -651,14 +651,6 @@ function estado_aplicante_obtener_total_aplicaciones($uid_aplicante) {
        //verificar cuantos elementos se van a actualizar
       foreach ($edit['field_ultimo_puesto_aplicado']['und'] as $key => $value) {
 
-        /*$result = db_select('bitacora_aplicante', 'b')
-          ->fields('b')
-          ->condition('uid_aplicante', $uid_aplicante,'=')
-          ->condition('nid_puesto', $value['target_id'],'=')
-          ->countQuery()
-          ->execute()
-          ->fetchField();*/
-
         $uid_admin = $user->uid;
          //extraer las otras aplicaciones
         $query = db_select('bitacora_aplicante', 'b');
@@ -831,29 +823,6 @@ function actualizarBitacora($uid_aplicante, $nid_puesto, $uid_admin, $tid_estado
       ->condition('uid_aplicante', $uid_aplicante, '=')
       ->execute();
   }
-
-  /*$result = db_select('aplicante_estado', 'ae')
-  ->fields('b', array('tid_estado'))
-  ->condition('uid_aplicante', $uid_aplicante,'=')
-  ->condition('nid_puesto', $nid_puesto,'=')
-  ->orderBy('fecha','DESC');
-  //->range(0,1);
-  $items = $result->execute()->fetchAll();
-
-  foreach ($items as $value) {
-    if($value->tid_estado == 28){
-      //si encontramos almenos un registro en la tabla con la asignacion de lista negra, se auto asignara el nuevo registro como lista negra
-      $encontrado = true;
-    }
-  }
-  //buscar en la tabla si ya existe un estado general previo, si no es asi se podria entender que es la primera ves que el usuario aplica
-  $insert = db_insert('aplicante_estado')
-  ->fields(array(
-      'uid_aplicante' => $uid_aplicante,
-      'tid_estado' => $tid_estado,
-      'fecha' => $fecha,
-    ))
-  ->execute(); */ 
 }
 
 function estado_aplicante_cron(){

@@ -15,9 +15,8 @@ class Interfaz extends CI_Controller {
     }
 
     public function actualizarEstadoAplicante($uid_aplicante, $nid_puesto, $tid_estado){
-
-	//url para actualizar en estado de la ultima aplicacion del usuario     		
- 	$request_url = base_url().'rrhh/api/users/user/'. $uid_aplicante;	
+		//url para actualizar en estado de la ultima aplicacion del usuario     		
+	 	$request_url = base_url().'rrhh/api/users/user/'. $uid_aplicante;	
 
     	//validar los argumentos url
     	if(!is_numeric($nid_puesto) || !is_numeric($uid_aplicante) || !is_numeric($tid_estado)){
