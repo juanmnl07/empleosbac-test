@@ -130,6 +130,7 @@ class Interfaz extends CI_Controller {
 
 											// cURL - utiliza el helper SevicioActualizar
 											$result = ServicioActualizar($request_url, $user_data, $session_cookie, $csrf_token);
+
 											if($result){
 												$data['success'] = true;
 												$data['code'] = $result['httpcode'];		
@@ -168,10 +169,27 @@ class Interfaz extends CI_Controller {
 
 											if(($count_preselecciones < 1) || (($count_preselecciones == 1) && ($tid_estado != 29))) {
 
-												//Se realizará una asignacion automática
+												//obtener el estado general, si esta en lista negra se sobreescribe el estado a aplicar
+												$estado_general_url = base_url('/rrhh/api/users/obtener_estado_general/retrieve.xml?uid_aplicante='. $uid_aplicante);
+												$estado_general = consumirServicio($estado_general_url, $session_cookie, $csrf_token);
+												$tid_estado_general = 0;
+
+												if(isset($estado_general->item)){
+	 												foreach($estado_general->item as $key => $value){
+	 													$tid_estado_general = $value->tid_estado;
+	 												}
+	 											}
+
+	 											if($tid_estado_general == 28){
+	 												$tid_estado = $tid_estado_general;
+	 											}
+
+	 											//$data['message'] = $tid_estado;
+
+	 											//Se realizará una asignacion automática
 												$user_data = array("field_estado" => array(
 																			"und" => array(
-																				$tid_estado => $tid_estado
+																				(int)$tid_estado => (int)$tid_estado
 																			)
 																		),
 																	"field_ultimo_puesto_aplicado" => array(
@@ -268,6 +286,7 @@ class Interfaz extends CI_Controller {
 				$data['code'] = '406';
 			}
 		}
+			
 			$data['response'] = $data;
 			$this->load->view('user/user-response', $data);
  	}
@@ -853,7 +872,7 @@ class Interfaz extends CI_Controller {
 				$data['mensaje'] = $auth_data['mensaje'];
 				$data['code'] = 406;
 			}
-			
+
 			$data['response'] = $data;
 			$this->load->view('user/user-response', $data);	
  		}

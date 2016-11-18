@@ -309,11 +309,41 @@ function estado_aplicante_services_resources() {
         ),
       ),
     ),
+    'obtener_estado_general' => array(
+      'operations' => array(
+        'retrieve' => array(
+          'help' => 'Obtener el estado general del usuario aplicante',
+          'callback' => '_estado_aplicante_obtener_estado_general',
+          'access callback' => 'user_access',
+          'access arguments' => array('access content'),
+          'access arguments append' => FALSE,
+          'args' => array(
+            array(
+              'name' => 'fn',
+              'type' => 'string',
+              'description' => 'Function to perform',
+              'source' => array('path' => '0'),
+              'optional' => TRUE,
+              'default' => '0',
+            ),
+            array(
+              'name' => 'uid_aplicante',
+              'type' => 'string',
+              'description' => 'identificacion del aplicante',
+              'source' => array('param' => 'uid_aplicante'),
+              'optional' => TRUE,
+              'default' => '0',
+            ),
+          ),
+        ),
+      ),
+    ),
   );
   return $api;
 }
 
 function _estado_aplicante_aplicantes_listado_costa_rica($fn){
+
   return estado_aplicante_obtener_aplicantes_listado_costa_rica();
 }
 
@@ -329,11 +359,7 @@ function _reiniciar_estado_aplicacion($fn, $idPuesto, $idAplicante){
 }
 
 function _liberar_estado_aplicacion($fn, $idAplicante, $idEstado){
-  /*global $user;
-  $uid_admin = $user->uid;
-  $uid_aplicante = $user_aplicante->uid;
-  $tid_estado = 27;  //es el tid del estado "no leido"
-  $fecha = time(); //fecha actual en unixtimestamp*/
+
   liberar_estado_del_aplicante($idAplicante, $idEstado);
 }
 
@@ -371,6 +397,11 @@ function _estado_aplicante_aplicantes_costa_rica($fn, $uid_aplicante){
   //obtener todos los datos de los aplicantes de costa rica y sus aplicaciones
   $uid_aplicante = intval($uid_aplicante);
   return estado_aplicante_obtener_aplicantes_costa_rica($uid_aplicante);
+}
+
+function _estado_aplicante_obtener_estado_general($fn, $uid_aplicante){
+  //consultar funcion que obtiene el estado del aplicante
+  return obtener_estado_general($uid_aplicante);
 }
 
 function liberar_estado_del_aplicante($uid_aplicante, $tid_estado){
@@ -547,6 +578,20 @@ function estado_aplicante_obtener_detalle_aplicacion($uid_aplicante, $nid_puesto
 }
 
 /**
+ * Obtener estado general del usuario
+ */
+function obtener_estado_general($uid_aplicante){
+  //realizar consulta para obtener el estado general
+  $query_estado_general = db_select('users', 'u');
+  $query_estado_general->join('aplicante_estado', 'ae', 'u.uid = ae.uid_aplicante');
+  $query_estado_general->fields('ae', array('tid_estado'));
+  $query_estado_general->condition('ae.uid_aplicante', $uid_aplicante, '=');
+  $result = $query_estado_general->execute()->fetchAll();
+
+  return $result;
+}
+
+/**
  * Obtener fecha de aplicacion
  */
 function estado_aplicante_cambiar_clave($u_email, $clave, $token) {
@@ -654,7 +699,6 @@ function estado_aplicante_obtener_total_aplicaciones($uid_aplicante) {
         $uid_admin = $user->uid;
          //extraer las otras aplicaciones
         $query = db_select('bitacora_aplicante', 'b');
-        //$query->join('taxonomy_term_data', 'ttd', '(ttd.tid = b.tid_estado)');
         $query->fields('b');
         $query->condition('b.uid_aplicante', $uid_aplicante, '=');
         $query->condition('b.nid_puesto', $value['target_id'], '<>');
@@ -667,7 +711,6 @@ function estado_aplicante_obtener_total_aplicaciones($uid_aplicante) {
             $aplicaciones [] = $value2->nid_puesto;
           }
         }
-        //if($result >= 1){
           //si el usuario es aplicante, el user administrador que esta ligado es admin
             //si al actualizar el estado, este es de tipo lista negra, se actualizara todos los estados a lista negra
           if ($tid_estado == 28){
@@ -678,7 +721,6 @@ function estado_aplicante_obtener_total_aplicaciones($uid_aplicante) {
               }
           } else {
             //verificar si el estado antes de cambiar pertenecia a "lista negra"
-
             $query2 = db_select('bitacora_aplicante', 'b');
             $query2->fields('b', array('tid_estado'));
             $query2->condition('b.uid_aplicante', $uid_aplicante, '=');
@@ -707,9 +749,7 @@ function estado_aplicante_obtener_total_aplicaciones($uid_aplicante) {
 
                 $estado = 27;
                 foreach ($items3 as $key3 => $value3) {
-                  //if ($value3->tid_estado <> 28){
-                    $estado = $value3->tid_estado;
-                  //}
+                  $estado = $value3->tid_estado;
                 }
                 actualizarBitacora($uid_aplicante, $value2, $uid_admin, $estado, $fecha, $liberar_estado);
               }
@@ -717,11 +757,10 @@ function estado_aplicante_obtener_total_aplicaciones($uid_aplicante) {
               //en caso contrario, se actualiza agregando un nuevo elemento en la bitacora
               actualizarBitacora($uid_aplicante, $value['target_id'], $uid_admin, $tid_estado, $fecha, $liberar_estado);
             } else {
-              //actualizacion normal de la bitacora
+              //actualizacion normal de la bitacora              
               actualizarBitacora($uid_aplicante, $value['target_id'], $uid_admin, $tid_estado, $fecha, $liberar_estado);
             }
           }
-        //}
       }
     }
   }else if(in_array('aplicante', $user->roles)){
@@ -806,26 +845,67 @@ function actualizarBitacora($uid_aplicante, $nid_puesto, $uid_admin, $tid_estado
 
   if($liberar_estado == false){
     //verificar
-    if($tid_estado > $tid_estado_general){
       //actualizar
+      $estadoMayor = obtenerEstadosMayor($uid_aplicante);
       $estado_general_updated = db_update('aplicante_estado') // Table name no longer needs {}
       ->fields(array(
-        'tid_estado' => $tid_estado,
+        'tid_estado' => split('=', $estadoMayor)[1],
       ))
       ->condition('uid_aplicante', $uid_aplicante, '=')
       ->execute();
-    }
   }else{
+    $estadoMayor = obtenerEstadosMayor($uid_aplicante);
     $estado_general_updated = db_update('aplicante_estado') // Table name no longer needs {}
       ->fields(array(
-        'tid_estado' => $tid_estado,
+        'tid_estado' => split('=', $estadoMayor)[1],
       ))
       ->condition('uid_aplicante', $uid_aplicante, '=')
       ->execute();
   }
 }
 
+function obtenerEstadosMayor($uid_aplicante){
+  $query_bitacora = db_select('bitacora_aplicante', 'bitacora');
+  $query_bitacora->fields('bitacora', array('nid_puesto', 'tid_estado', 'fecha'));
+  $query_bitacora->join('node', 'puesto', 'puesto.nid = bitacora.nid_puesto');
+  $query_bitacora->condition('uid_aplicante', $uid_aplicante,'=');
+  $query_bitacora->condition('status', 1 ,'=');
+  $items_bitacora = $query_bitacora->execute()->fetchAll();
+
+  $estadosRecientes = array();
+  foreach ($items_bitacora as $key => $value) {
+    $encontrado = false;
+    for ($i=0; $i < count($estadosRecientes); $i++) { 
+      $estado = split('=', $estadosRecientes[$i]);
+      if((int)$estado[0] == (int)$value->nid_puesto){
+        $encontrado = true;
+        $estadosRecientes[$i] = $value->nid_puesto . '=' . $value->tid_estado;
+      }
+    }
+    if(!$encontrado){
+      $estadosRecientes[] = $value->nid_puesto . '=' . $value->tid_estado;
+    }
+  }
+  $estadoMayor = '';
+  for ($i=0; $i < count($estadosRecientes); $i++) { 
+    if($estadoMayor == ''){
+      $estadoMayor = $estadosRecientes[$i];
+    }else{
+      if(split('=', $estadosRecientes[$i])[1] > split('=', $estadoMayor)[1]){
+        $estadoMayor = $estadosRecientes[$i];
+      } else {
+        if(( split('=', $estadosRecientes[$i])[1] == '26' )  && ( split('=', $estadoMayor)[1] == '27' )){
+          $estadoMayor = $estadosRecientes[$i];
+        }
+      }
+    }
+  }
+
+  return $estadoMayor;
+}
+
 function estado_aplicante_cron(){
+
   //extraer_estados();
 }
 
