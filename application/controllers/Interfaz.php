@@ -128,8 +128,23 @@ class Interfaz extends CI_Controller {
 																	),
 															   );
 
-											// cURL - utiliza el helper SevicioActualizar
+											//verificar el estado del puesto
+									 		$estado_puesto_url = base_url().'rrhh/api/puestos/obtener_estado_puesto/retrieve?nid_puesto=' . $nid_puesto . '.xml';
+											$resultado_estado_puesto = consumirServicioSinToken($estado_puesto_url, $session_cookie);
+											
+											$cambiarEstado = false;
+											if($resultado_estado_puesto == '0'){
+												$cambiarEstado = true;		
+												$actualizar_puesto_url = base_url().'rrhh/api/puestos/actualizar_puesto_temporalmente/retrieve?nid_puesto=' . $nid_puesto . '.xml';
+												$resultado_puesto_actualizado = consumirServicioSinToken($actualizar_puesto_url, $session_cookie);	
+											}
+
 											$result = ServicioActualizar($request_url, $user_data, $session_cookie, $csrf_token);
+
+											if($cambiarEstado){
+												$actualizar_puesto_url = base_url().'rrhh/api/puestos/actualizar_puesto_temporalmente/retrieve?nid_puesto=' . $nid_puesto . '.xml';
+												$resultado_puesto_actualizado = consumirServicioSinToken($actualizar_puesto_url, $session_cookie);	
+											}
 
 											if($result){
 												$data['success'] = true;
@@ -194,7 +209,7 @@ class Interfaz extends CI_Controller {
 																		),
 																	"field_ultimo_puesto_aplicado" => array(
 																			"und" => array(
-																				$nid_puesto => $nid_puesto
+																				$nid_puesto => (int)$nid_puesto
 																			)
 																		),
 																	"field_puesto" => array(
@@ -202,24 +217,38 @@ class Interfaz extends CI_Controller {
 																		),
 																   );
 
-											 	//exit(var_dump($puestos_aplicados));
-
 												$listado_puestos = array();
 												foreach ($puestos_aplicados->items as $value) {
 													foreach ($value->item as $key2 => $value2) {
 														$puesto = $value2;
-														$listado_puestos[(string)$puesto->nid_puesto] = (string)$puesto->nid_puesto;
+														$listado_puestos[(string)$puesto->nid_puesto] = (int)$puesto->nid_puesto;
 													}
 												}
-												//exit(var_dump($listado_puestos));
 												//asignar el arreglo de los puestos aplicados junto con el que hay que agregar
 												$user_data["field_puesto"]["und"] = $listado_puestos;
 												$user_data["field_puesto"]["und"][$nid_puesto] = $nid_puesto;														
-
 												//exit(var_dump($user_data));
 
-												// cURL - utiliza el helper SevicioActualizar
+												//verificar el estado del puesto
+										 		$estado_puesto_url = base_url().'rrhh/api/puestos/obtener_estado_puesto/retrieve?nid_puesto=' . $nid_puesto . '.xml';
+												$resultado_estado_puesto = consumirServicioSinToken($estado_puesto_url, $session_cookie);
+												
+												$cambiarEstado = false;
+												if($resultado_estado_puesto == '0'){
+													$cambiarEstado = true;		
+													$actualizar_puesto_url = base_url().'rrhh/api/puestos/actualizar_puesto_temporalmente/retrieve?nid_puesto=' . $nid_puesto . '.xml';
+													$resultado_puesto_actualizado = consumirServicioSinToken($actualizar_puesto_url, $session_cookie);	
+												}
+
 												$result = ServicioActualizar($request_url, $user_data, $session_cookie, $csrf_token);
+
+												if($cambiarEstado){
+													$actualizar_puesto_url = base_url().'rrhh/api/puestos/actualizar_puesto_temporalmente/retrieve?nid_puesto=' . $nid_puesto . '.xml';
+													$resultado_puesto_actualizado = consumirServicioSinToken($actualizar_puesto_url, $session_cookie);	
+												}
+
+												// cURL - utiliza el helper SevicioActualizar
+												//$result = ServicioActualizar($request_url, $user_data, $session_cookie, $csrf_token);
 
 												if($result){
 													$data['success'] = true;

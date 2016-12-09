@@ -338,6 +338,64 @@ function estado_aplicante_services_resources() {
         ),
       ),
     ),
+    'actualizar_puesto_temporalmente' => array(
+      'operations' => array(
+        'retrieve' => array(
+          'help' => 'Actualizar estado del puesto temporalmente',
+          'callback' => '_estado_aplicante_actualizar_puesto_temporalmente',
+          'access callback' => 'user_access',
+          'access arguments' => array('access content'),
+          'access arguments append' => FALSE,
+          'args' => array(
+            array(
+              'name' => 'fn',
+              'type' => 'string',
+              'description' => 'Function to perform',
+              'source' => array('path' => '0'),
+              'optional' => TRUE,
+              'default' => '0',
+            ),
+            array(
+              'name' => 'nid_puesto',
+              'type' => 'int',
+              'description' => 'Identificacion del puesto',
+              'source' => array('param' => 'nid_puesto'),
+              'optional' => TRUE,
+              'default' => '0',
+            ),
+          ),
+        ),
+      ),
+    ),
+    'obtener_estado_puesto' => array(
+      'operations' => array(
+        'retrieve' => array(
+          'help' => 'Obtener el estado del puesto',
+          'callback' => '_estado_aplicante_obtener_estado_puesto',
+          'access callback' => 'user_access',
+          'access arguments' => array('access content'),
+          'access arguments append' => FALSE,
+          'args' => array(
+            array(
+              'name' => 'fn',
+              'type' => 'string',
+              'description' => 'Function to perform',
+              'source' => array('path' => '0'),
+              'optional' => TRUE,
+              'default' => '0',
+            ),
+            array(
+              'name' => 'nid_puesto',
+              'type' => 'int',
+              'description' => 'Identificacion del puesto',
+              'source' => array('param' => 'nid_puesto'),
+              'optional' => TRUE,
+              'default' => '0',
+            ),
+          ),
+        ),
+      ),
+    ),
   );
   return $api;
 }
@@ -391,6 +449,18 @@ function _estado_aplicante_bitacora_admin_retrieve($fn, $uid_aplicante, $nid_pue
   $uid_aplicante = intval($uid_aplicante);
   $nid_puesto = intval($nid_puesto);
   return estado_aplicante_obtener_detalle_aplicacion($uid_aplicante, $nid_puesto);
+}
+
+function _estado_aplicante_actualizar_puesto_temporalmente($fn, $nid_puesto) {
+  // Check for mad values
+  $nid_puesto = intval($nid_puesto);
+  return actualizarPuestoTemporalmente($nid_puesto);
+}
+
+function _estado_aplicante_obtener_estado_puesto($fn, $nid_puesto) {
+  // Check for mad values
+  $nid_puesto = intval($nid_puesto);
+  return obtenerEstadoPuesto($nid_puesto);
 }
 
 function _estado_aplicante_aplicantes_costa_rica($fn, $uid_aplicante){
@@ -661,7 +731,7 @@ function estado_aplicante_obtener_total_aplicaciones($uid_aplicante) {
  * Implements hook_user_update()
  */
  //actualizar el estado del aplicante
- function estado_aplicante_user_update(&$edit, $account, $category){
+function estado_aplicante_user_update(&$edit, $account, $category){
   global $user;
   $user_aplicante = user_load_by_mail($edit['mail']);
   //variables
@@ -821,6 +891,37 @@ function estado_aplicante_obtener_total_aplicaciones($uid_aplicante) {
   }
 }
 
+/**
+ * custom function()
+ */
+ //habilitar el puesto temporalmente
+function actualizarPuestoTemporalmente($id_puesto){
+  //validar si el puesto esta en estado 0
+  $result = obtenerEstadoPuesto($id_puesto);
+  $status = 0;
+  if($result == 0){
+    $status = 1;
+  }
+  $num_updated = db_update('node')
+  ->fields(array(
+    'status' => $status,
+  ))
+  ->condition('nid', $id_puesto, '=')
+  ->execute();
+  
+  return array('result' => $num_updated);
+}
+
+function obtenerEstadoPuesto($id_puesto){
+  //validar si el puesto esta en estado 0
+  $result = db_select('node', 'n')
+          ->fields('n', array('status'))
+          ->condition('nid', $id_puesto,'=')
+          ->execute()
+          ->fetchField();
+  return $result;
+}
+
 function actualizarBitacora($uid_aplicante, $nid_puesto, $uid_admin, $tid_estado, $fecha, $liberar_estado=false){
   $insert = db_insert('bitacora_aplicante')
   ->fields(array(
@@ -847,36 +948,92 @@ function actualizarBitacora($uid_aplicante, $nid_puesto, $uid_admin, $tid_estado
     //verificar
       //actualizar
       $estadoMayor = obtenerEstadosMayor($uid_aplicante);
+      $tid_estado = explode('=', $estadoMayor);
       $estado_general_updated = db_update('aplicante_estado') // Table name no longer needs {}
       ->fields(array(
-        'tid_estado' => split('=', $estadoMayor)[1],
+        'tid_estado' => $tid_estado[1],
       ))
       ->condition('uid_aplicante', $uid_aplicante, '=')
       ->execute();
   }else{
     $estadoMayor = obtenerEstadosMayor($uid_aplicante);
+    $tid_estado = explode('=', $estadoMayor);
     $estado_general_updated = db_update('aplicante_estado') // Table name no longer needs {}
       ->fields(array(
-        'tid_estado' => split('=', $estadoMayor)[1],
+        'tid_estado' => $tid_estado[1],
       ))
       ->condition('uid_aplicante', $uid_aplicante, '=')
       ->execute();
   }
 }
 
+function estado_aplicante_cron(){
+  inicializarEstadoGeneral();
+}
+
+function inicializarEstadoGeneral(){
+  /*$aplicantes = obtenerAplicantes();
+  $aplicante = '';
+  $modified = 0;
+  foreach ($aplicantes as $value) {
+    $aplicante = $value->uid;
+    $modified = $value->created;
+    $insert = db_insert('aplicante_estado')
+    ->fields(array(
+        'uid_aplicante' => $aplicante,
+        'tid_estado' => 27,
+        'modified' => $modified,
+      ))
+    ->execute(); 
+  }*/
+  //se llama la funcion que se encarga de actualizar todos los estados con base en la bitácora.
+  actualizarEstadoGeneral();
+}
+
+function actualizarEstadoGeneral(){
+  $aplicantes = obtenerAplicantes();
+  foreach ($aplicantes as $value) {
+    $estadoMayor = obtenerEstadosMayor($value->uid);
+    //exit(var_export($estadoMayor));
+    if($estadoMayor != ''){
+      $tid_estado = explode('=', $estadoMayor);
+      $tid_estado = $tid_estado[1];  
+    }else{
+      $tid_estado = 27;
+    }    
+    $estado_general_updated = db_update('aplicante_estado')
+      ->fields(array(
+        'tid_estado' => $tid_estado,
+      ))
+      ->condition('uid_aplicante', (int)$value->uid, '=')
+      ->execute(); 
+  }
+  /*$estadoMayor = obtenerEstadosMayor(3894);
+  exit(var_export($estadoMayor));*/
+}
+
+function obtenerAplicantes(){
+  $query = db_select('users', 'u');
+  $query->leftjoin('users_roles', 'ur', '(ur.uid = u.uid)');
+  $query->fields('u', array('uid','created'));
+  $query->condition('ur.rid', 4, '=');
+  $rows = $query->execute()->fetchAll();
+  return $rows;
+}
+
 function obtenerEstadosMayor($uid_aplicante){
   $query_bitacora = db_select('bitacora_aplicante', 'bitacora');
   $query_bitacora->fields('bitacora', array('nid_puesto', 'tid_estado', 'fecha'));
-  $query_bitacora->join('node', 'puesto', 'puesto.nid = bitacora.nid_puesto');
+  //$query_bitacora->join('node', 'puesto', 'puesto.nid = bitacora.nid_puesto');
   $query_bitacora->condition('uid_aplicante', $uid_aplicante,'=');
-  $query_bitacora->condition('status', 1 ,'=');
+  //$query_bitacora->condition('status', 1 ,'=');
   $items_bitacora = $query_bitacora->execute()->fetchAll();
 
   $estadosRecientes = array();
   foreach ($items_bitacora as $key => $value) {
     $encontrado = false;
     for ($i=0; $i < count($estadosRecientes); $i++) { 
-      $estado = split('=', $estadosRecientes[$i]);
+      $estado = explode('=', $estadosRecientes[$i]);
       if((int)$estado[0] == (int)$value->nid_puesto){
         $encontrado = true;
         $estadosRecientes[$i] = $value->nid_puesto . '=' . $value->tid_estado;
@@ -891,10 +1048,10 @@ function obtenerEstadosMayor($uid_aplicante){
     if($estadoMayor == ''){
       $estadoMayor = $estadosRecientes[$i];
     }else{
-      if(split('=', $estadosRecientes[$i])[1] > split('=', $estadoMayor)[1]){
+      if(explode('=', $estadosRecientes[$i])[1] > explode('=', $estadoMayor)[1]){
         $estadoMayor = $estadosRecientes[$i];
       } else {
-        if(( split('=', $estadosRecientes[$i])[1] == '26' )  && ( split('=', $estadoMayor)[1] == '27' )){
+        if(( explode('=', $estadosRecientes[$i])[1] == '26' )  && ( explode('=', $estadoMayor)[1] == '27' )){
           $estadoMayor = $estadosRecientes[$i];
         }
       }
@@ -902,100 +1059,4 @@ function obtenerEstadosMayor($uid_aplicante){
   }
 
   return $estadoMayor;
-}
-
-function estado_aplicante_cron(){
-
-  //extraer_estados();
-}
-
-function extraer_estados($id_aplicante = ''){
-
-  $query = db_select('users', 'u');
-  $query->leftjoin('users_roles', 'ur', '(ur.uid = u.uid)');
-  //$query->leftjoin('aplicante_estado', 'ae', '(ae.uid_aplicante = u.uid)');
-  $query->leftjoin('field_data_field_nombre_y_apellidos', 'fdfna', '(fdfna.entity_id = u.uid)');
-  //$query->leftjoin('field_data_field_nacionalidad', 'fdfnac', '(fdfnac.entity_id = u.uid)');
-  $query->fields('u', array('uid','created'));
-  $query->fields('fdfna', array('field_nombre_y_apellidos_value'));
-  //$query->fields('ae', array('tid_estado'));
-  $query->condition('ur.rid', 4, '=');
-  //$query->condition('fdfnac.field_nacionalidad_iso2','CR', '=');
-  $rows = $query->execute()->fetchAll();
-
-  $aplicante = '';
-  $modified = 0;
-  foreach ($rows as $value) {
-    $aplicante = $value->uid;
-    $modified = $value->created;
-    $insert = db_insert('aplicante_estado')
-    ->fields(array(
-        'uid_aplicante' => $aplicante,
-        'tid_estado' => 27,
-        'modified' => $modified,
-      ))
-    ->execute(); 
-  }
-
-  //exit();
-
-  $result = db_select('field_data_field_puesto', 'fdfp');
-  $result->leftjoin('bitacora_aplicante', 'b', 'fdfp.entity_id = b.uid_aplicante');
-  $result->leftjoin('field_data_field_nacionalidad', 'fdfna', '(fdfna.entity_id = b.uid_aplicante)');
-  $result->leftjoin('users_roles', 'ur', '(ur.uid = b.uid_aplicante)');
-  $result->fields('b', array('tid_estado', 'nid_puesto', 'fecha'));
-  $result->fields('fdfp', array('entity_id', 'field_puesto_target_id'));
-  $result->condition('ur.rid', 4, '=');
-  $result->condition('fdfna.field_nacionalidad_iso2','CR', '=');
-  if($id_aplicante != ''){
-    $result->condition('fdfp.entity_id', $id_aplicante ,'=');
-  }
-  //->condition('nid_puesto', $nid_puesto,'=')
-  //$result->groupBy('b.nid_puesto');
-  $result->orderBy('fdfp.entity_id','ASC');
-  $result->orderBy('b.nid_puesto','ASC');
-  $result->orderBy('b.fecha','ASC');
-  $items = $result->execute()->fetchAll();
-
-  //utilzar la tabla de bitacora aplicante para extraer el estado general
-  
-  $aplicaciones = array();
-  $datos_aplicante = array();
-  $aplicante_actual = '';
-  $aplicante_anterior = '';
-  foreach ($items as $value) {
-    if($aplicante_actual == ''){
-      $aplicante_actual = $value->entity_id;
-      array_push($datos_aplicante, array('puesto' => $value->nid_puesto, 'estado' => $value->tid_estado, 'fecha' => $value->fecha, 'aplicante' => $value->entity_id));
-    }
-    if($aplicante_actual == $value->entity_id){
-      array_push($datos_aplicante, array('puesto' => $value->nid_puesto, 'estado' => $value->tid_estado, 'fecha' => $value->fecha, 'aplicante' => $value->entity_id));
-    } else {
-      $aplicante_actual = $value->entity_id;
-      array_push($aplicaciones, $datos_aplicante);
-      $datos_aplicante = array();
-      array_push($datos_aplicante, array('puesto' => $value->nid_puesto, 'estado' => $value->tid_estado, 'fecha' => $value->fecha, 'aplicante' => $value->entity_id));
-    }
-  }
-
-  //exit(var_dump($aplicaciones));
-  //exit();
-  //recorrer el arreglo para ingresar el valor mayor
-  foreach ($aplicaciones as $key => $value) {
-  $estado = 0;
-  $aplicante = '';
-    foreach ($value as $key2 => $value2) {
-      if($estado < $value2['estado']){
-        $estado = $value2['estado'];
-        $aplicante = $value2['aplicante'];
-      }
-    }
-
-    $update = db_update('aplicante_estado')
-    ->fields(array(
-      'tid_estado' => $estado
-    ))
-    ->condition('uid_aplicante', $aplicante)       
-    ->execute();
-  }
 }
